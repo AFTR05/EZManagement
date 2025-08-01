@@ -1,5 +1,0 @@
-
-enum StateEnum {
-  active, 
-  inactive
-}
