@@ -34,6 +34,15 @@ dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   msix: ^3.16.9
 
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/ez_management_app_logo.png"
+  windows:
+    generate: true
+    image_path: "assets/images/ez_management_app_logo.png"
+    icon_size: 48
+
 flutter:
 
   uses-material-design: true
