@@ -1,5 +1,5 @@
 
-import 'package:ezmanagement/domain/entities/entity_mixin.dart';
+import 'package:ezmanagement/src/domain/entities/entity_mixin.dart';
 
 class SaleDetailEntity with EntityMixin {
   final String productId;

@@ -1,5 +1,5 @@
-import 'package:ezmanagement/domain/entities/entity_mixin.dart';
-import 'package:ezmanagement/domain/enum/payment_method_enum.dart';
+import 'package:ezmanagement/src/domain/entities/entity_mixin.dart';
+import 'package:ezmanagement/src/domain/enum/payment_method_enum.dart';
 
 class MonetaryIncome with EntityMixin {
   final String id;

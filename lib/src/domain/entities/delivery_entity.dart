@@ -1,4 +1,4 @@
-import 'package:ezmanagement/domain/entities/entity_mixin.dart';
+import 'package:ezmanagement/src/domain/entities/entity_mixin.dart';
 
 class DeliveryEntity with EntityMixin {
   final String id;

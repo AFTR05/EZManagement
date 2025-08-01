@@ -1,5 +1,5 @@
-import 'package:ezmanagement/domain/entities/entity_mixin.dart';
-import 'package:ezmanagement/domain/enum/materia_state.dart';
+import 'package:ezmanagement/src/domain/entities/entity_mixin.dart';
+import 'package:ezmanagement/src/domain/enum/materia_state.dart';
 class MaterialInput with EntityMixin {
   final String id;
   final DateTime date;

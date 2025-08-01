@@ -1,6 +1,6 @@
-import 'package:ezmanagement/domain/entities/entity_mixin.dart';
-import 'package:ezmanagement/domain/entities/role_entity.dart';
-import 'package:ezmanagement/domain/enum/state_enum.dart';
+import 'package:ezmanagement/src/domain/entities/entity_mixin.dart';
+import 'package:ezmanagement/src/domain/entities/role_entity.dart';
+import 'package:ezmanagement/src/domain/enum/state_enum.dart';
 
 class UserEntity with EntityMixin {
   final String id;
