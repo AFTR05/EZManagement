@@ -1,4 +1,4 @@
-enum MateriaState {
+enum MaterialState {
   active,
   inactive,
   archived,

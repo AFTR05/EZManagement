@@ -1,8 +1,9 @@
+import 'package:ezmanagement/domain/entities/entity_mixin.dart';
 import 'package:ezmanagement/domain/enum/payment_method_enum.dart';
 
-class MonetaryIncome {
+class MonetaryIncome with EntityMixin {
   final String id;
-  final String date;
+  final DateTime date;
   final double amount;
   final PaymentMethodEnum paymentMethod;
   final String description;
@@ -19,9 +20,34 @@ class MonetaryIncome {
     required this.saleId,
   });
 
+  factory MonetaryIncome.fromMap(Map<String, dynamic> map, String id) {
+    return MonetaryIncome(
+      id: id,
+      date: DateTime.tryParse(map['date'] ?? '') ?? DateTime.now(),
+      amount: (map['amount'] as num?)?.toDouble() ?? 0.0,
+      paymentMethod: PaymentMethodEnum.values.firstWhere(
+        (e) => e.toString().split('.').last == map['paymentMethod'],
+        orElse: () => PaymentMethodEnum.cash,
+      ),
+      description: map['description'] ?? '',
+      clientId: map['clientId'] ?? '',
+      saleId: map['saleId'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'date': date.toIso8601String(),
+      'amount': amount,
+      'paymentMethod': paymentMethod.toString().split('.').last,
+      'description': description,
+      'clientId': clientId,
+      'saleId': saleId,
+    };
+  }
+
   @override
   String toString() {
-    return 'MonetaryIncome(id: $id, date: $date, amount: $amount, date: $date, description: $description)';
+    return 'MonetaryIncome(id: $id, date: $date, amount: $amount, description: $description)';
   }
-  
 }

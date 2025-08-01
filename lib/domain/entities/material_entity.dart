@@ -1,4 +1,7 @@
-class MaterialEntity {
+
+import 'package:ezmanagement/domain/entities/entity_mixin.dart';
+
+class MaterialEntity with EntityMixin {
   final String id;
   final String name;
   final String type;
@@ -9,9 +12,23 @@ class MaterialEntity {
     required this.type,
   });
 
+  factory MaterialEntity.fromMap(Map<String, dynamic> map, String id) {
+    return MaterialEntity(
+      id: id,
+      name: map['name'] ?? '',
+      type: map['type'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'type': type,
+    };
+  }
+
   @override
   String toString() {
-    return 'MaterialEntity(id: $id, name: $name, description: $type)';
+    return 'MaterialEntity(id: $id, name: $name, type: $type)';
   }
-  
 }
