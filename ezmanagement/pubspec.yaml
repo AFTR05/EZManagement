@@ -44,6 +44,52 @@ flutter_launcher_icons:
     icon_size: 48
 
 flutter:
+  fonts:
+    - family: OpenSansHebrew
+      fonts:
+        - asset: assets/fonts/open_sans_hebrew/OpenSansHebrew-Light.ttf
+          weight: 300
+        - asset: assets/fonts/open_sans_hebrew/OpenSansHebrew-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/open_sans_hebrew/OpenSansHebrew-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/open_sans_hebrew/OpenSansHebrew-Italic.ttf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/open_sans_hebrew/OpenSansHebrew-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/open_sans_hebrew/OpenSansHebrew-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/open_sans_hebrew/OpenSansHebrew-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/open_sans_hebrew/OpenSansHebrew-ExtraBoldItalic.ttf
+          weight: 800
+          style: italic
+
+    - family: OpenSansHebrewCondensed
+      fonts:
+        - asset: assets/fonts/open_sans_hebrew_condensed/OpenSansHebrewCondensed-Light.ttf
+          weight: 300
+        - asset: assets/fonts/open_sans_hebrew_condensed/OpenSansHebrewCondensed-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/open_sans_hebrew_condensed/OpenSansHebrewCondensed-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/open_sans_hebrew_condensed/OpenSansHebrewCondensed-Italic.ttf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/open_sans_hebrew_condensed/OpenSansHebrewCondensed-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/open_sans_hebrew_condensed/OpenSansHebrewCondensed-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/open_sans_hebrew_condensed/OpenSansHebrewCondensed-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/open_sans_hebrew_condensed/OpenSansHebrewCondensed-ExtraBoldItalic.ttf
+          weight: 800
+          style: italic
 
   uses-material-design: true
   generate: true
@@ -52,6 +98,7 @@ flutter:
     - assets/
     - assets/images/
     - assets/translations/
+    - assets/fonts/
 
 msix_config:
   display_name: EZ Management

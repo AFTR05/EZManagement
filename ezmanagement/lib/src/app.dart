@@ -46,6 +46,7 @@ class _EZManagementAppState extends State<EZManagementApp> {
                   title: EnvironmentConfig.nameApp,
                   navigatorObservers: [NavigationService.myTransitionObserver],
                   theme: ThemeData(
+                    fontFamily: "OpenSansHebrewCondensed",
                     useMaterial3: true,
                   ).copyWith(
                     primaryColor: EZColorsApp.ezAppColor,
