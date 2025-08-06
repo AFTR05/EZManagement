@@ -13,10 +13,12 @@ class CustomAuthTextFieldWidget extends StatefulWidget {
     this.suffix,
     this.validator,
     this.pattern,
+    this.boxBorder,
     required this.hintText,
     required this.controller,
   });
 
+  final BoxBorder? boxBorder;
   final TextInputType? keyboardType;
   final bool isTop;
   final bool isBottom;
@@ -49,7 +51,7 @@ class _CustomAuthTextFieldWidgetState extends State<CustomAuthTextFieldWidget> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: borderRadius,
-        border: Border(
+        border: widget.boxBorder ?? Border(
           top: BorderSide(color: borderColor, width: 0.5),
           right: BorderSide(color: borderColor, width: 0.5),
           bottom: BorderSide(color: borderColor, width: 0.5),
