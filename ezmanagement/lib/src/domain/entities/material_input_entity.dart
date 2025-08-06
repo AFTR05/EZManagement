@@ -1,6 +1,6 @@
 import 'package:ezmanagement/src/domain/entities/entity_mixin.dart';
 import 'package:ezmanagement/src/domain/enum/materia_state.dart';
-class MaterialInput with EntityMixin {
+class MaterialInputEntity with EntityMixin {
   final String id;
   final DateTime date;
   final double stock;
@@ -10,7 +10,7 @@ class MaterialInput with EntityMixin {
   final String supplierId;
   final String userId;
 
-  MaterialInput({
+  MaterialInputEntity({
     required this.id,
     required this.stock,
     required this.date,
@@ -21,8 +21,8 @@ class MaterialInput with EntityMixin {
     this.batchNumber,
   });
 
-  factory MaterialInput.fromMap(Map<String, dynamic> map, String id) {
-    return MaterialInput(
+  factory MaterialInputEntity.fromMap(Map<String, dynamic> map, String id) {
+    return MaterialInputEntity(
       id: id,
       stock: (map['stock'] as num?)?.toDouble() ?? 0.0,
       date: DateTime.tryParse(map['date'] ?? '') ?? DateTime.now(),

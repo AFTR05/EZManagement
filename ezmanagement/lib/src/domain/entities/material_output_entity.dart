@@ -1,7 +1,7 @@
 
 import 'package:ezmanagement/src/domain/entities/entity_mixin.dart';
 
-class MaterialOutput with EntityMixin {
+class MaterialOutputEntity with EntityMixin {
   final String id;
   final DateTime date;
   final double stock;
@@ -10,7 +10,7 @@ class MaterialOutput with EntityMixin {
   final String projectId;
   final String justification;
 
-  MaterialOutput({
+  MaterialOutputEntity({
     required this.id,
     required this.date,
     required this.stock,
@@ -20,8 +20,8 @@ class MaterialOutput with EntityMixin {
     required this.justification,
   });
 
-  factory MaterialOutput.fromMap(Map<String, dynamic> map, String id) {
-    return MaterialOutput(
+  factory MaterialOutputEntity.fromMap(Map<String, dynamic> map, String id) {
+    return MaterialOutputEntity(
       id: id,
       date: DateTime.tryParse(map['date'] ?? '') ?? DateTime.now(),
       stock: (map['stock'] as num?)?.toDouble() ?? 0.0,

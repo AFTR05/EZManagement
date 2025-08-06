@@ -1,7 +1,7 @@
 import 'package:ezmanagement/src/domain/entities/entity_mixin.dart';
 import 'package:ezmanagement/src/domain/enum/payment_method_enum.dart';
 
-class MonetaryIncome with EntityMixin {
+class MonetaryIncomeEntity with EntityMixin {
   final String id;
   final DateTime date;
   final double amount;
@@ -10,7 +10,7 @@ class MonetaryIncome with EntityMixin {
   final String clientId;
   final String saleId;
 
-  MonetaryIncome({
+  MonetaryIncomeEntity({
     required this.id,
     required this.date,
     required this.amount,
@@ -20,8 +20,8 @@ class MonetaryIncome with EntityMixin {
     required this.saleId,
   });
 
-  factory MonetaryIncome.fromMap(Map<String, dynamic> map, String id) {
-    return MonetaryIncome(
+  factory MonetaryIncomeEntity.fromMap(Map<String, dynamic> map, String id) {
+    return MonetaryIncomeEntity(
       id: id,
       date: DateTime.tryParse(map['date'] ?? '') ?? DateTime.now(),
       amount: (map['amount'] as num?)?.toDouble() ?? 0.0,

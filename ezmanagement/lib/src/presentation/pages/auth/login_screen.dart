@@ -1,3 +1,4 @@
+import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
 import 'package:ezmanagement/src/presentation/custom_widgets/inputs/custom_auth_text_field_widget.dart';
 import 'package:ezmanagement/src/presentation/custom_widgets/logo/ez_logo_widget.dart';
 import 'package:ezmanagement/src/presentation/pages/custom_widgets/backgrounds/user_background_decoration.dart';
@@ -84,18 +85,12 @@ class _LoginScreenState extends State<LoginScreen>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(height: height * 0.08),
-
-                          // Título
                           _buildTitle(isSmallScreen),
-
                           SizedBox(height: height * 0.06),
-
-                          // Formulario
                           _buildLoginForm(width, height, isSmallScreen),
 
                           SizedBox(height: height * 0.08),
 
-                          // Logo
                           EZLogoWidget(
                             width: width,
                             isSmallScreen: isSmallScreen,
@@ -137,46 +132,68 @@ class _LoginScreenState extends State<LoginScreen>
 
   Widget _buildLoginForm(double width, double height, bool isSmallScreen) {
     final formWidth = width > 600 ? 400.0 : width * 0.85;
+    final borderColor = Theme.of(context).brightness == Brightness.dark
+        ? Colors.white
+        : EZColorsApp.lightGray;
 
-    return Container(
-      width: formWidth,
-      alignment: Alignment.center,
-      child: Stack(
-        children: [
-          // Contenedor de campos con sombra
-          Container(
-            margin: EdgeInsets.only(right: isSmallScreen ? 25 : 30),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-            child: Column(
-              children: [
-                CustomAuthTextFieldWidget(
-                  controller: _userController,
-                  hintText: 'Usuario',
-                  isTop: true,
-                  prefix: Icon(
-                    Icons.person_outline,
-                    size: isSmallScreen ? 18 : 20,
+    return Align(
+      alignment: isSmallScreen ? Alignment.centerLeft : Alignment.center,
+      child: Container(
+        width: isSmallScreen ? double.infinity : formWidth,
+        padding: isSmallScreen ? const EdgeInsets.only(left: 0) : null,
+        child: Stack(
+          children: [
+            Container(
+              margin: EdgeInsets.only(right: isSmallScreen ? 25 : 30),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                crossAxisAlignment: isSmallScreen
+                    ? CrossAxisAlignment.start
+                    : CrossAxisAlignment.center,
+                children: [
+                  CustomAuthTextFieldWidget(
+                    controller: _userController,
+                    hintText: 'Usuario',
+                    boxBorder: Border(
+                      top: BorderSide(color: borderColor, width: 0.5),
+                      right: BorderSide(color: borderColor, width: 0.5),
+                      bottom: BorderSide(color: borderColor, width: 0.25),
+                      left: BorderSide(color: borderColor, width: 0.5),
+                    ),
+                    isTop: true,
+                    prefix: Icon(
+                      Icons.person_outline,
+                      size: isSmallScreen ? 18 : 20,
+                    ),
                   ),
-                ),
-                CustomAuthTextFieldWidget(
-                  controller: _passwordController,
-                  hintText: 'Contraseña',
-                  isBottom: true,
-                  isPasswordField: true,
-                  suffix: SizedBox(width: isSmallScreen ? 35 : 40),
-                ),
-              ],
+                  CustomAuthTextFieldWidget(
+                    controller: _passwordController,
+                    hintText: 'Contraseña',
+                    boxBorder: Border(
+                      top: BorderSide(color: borderColor, width: 0.25),
+                      right: BorderSide(color: borderColor, width: 0.5),
+                      bottom: BorderSide(color: borderColor, width: 0.5),
+                      left: BorderSide(color: borderColor, width: 0.5),
+                    ),
+                    isBottom: true,
+                    isPasswordField: true,
+                    suffix: SizedBox(width: isSmallScreen ? 35 : 40),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Positioned(
-            right: 0,
-            top: _getButtonTopPosition(isSmallScreen),
-            child: CustomLoginButtonWidget(
-              isSmallScreen: isSmallScreen,
-              onTap: _handleLogin,
+            Positioned(
+              right: 0,
+              top: _getButtonTopPosition(isSmallScreen),
+              child: CustomLoginButtonWidget(
+                isSmallScreen: isSmallScreen,
+                onTap: _handleLogin,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
