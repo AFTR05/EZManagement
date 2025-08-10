@@ -1,13 +1,13 @@
 import 'package:ezmanagement/src/domain/entities/entity_mixin.dart';
 
-class DeliveryEntity with EntityMixin {
+class ClientEntity with EntityMixin {
   final String id;
   final String name;
   final String email;
   final String nit;
   final String direction;
 
-  DeliveryEntity({
+  ClientEntity({
     required this.id,
     required this.name,
     required this.email,
@@ -15,8 +15,13 @@ class DeliveryEntity with EntityMixin {
     required this.direction,
   });
 
-  factory DeliveryEntity.fromMap(Map<String, dynamic> map, String id) {
-    return DeliveryEntity(
+  ClientEntity({
+    required this.id,
+    required this.email,
+  });
+
+  factory ClientEntity.fromMap(Map<String, dynamic> map, String id) {
+    return ClientEntity(
       id: id,
       name: map['name'] ?? '',
       email: map['email'] ?? '',
