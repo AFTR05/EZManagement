@@ -15,11 +15,6 @@ class ClientEntity with EntityMixin {
     required this.direction,
   });
 
-  ClientEntity({
-    required this.id,
-    required this.email,
-  });
-
   factory ClientEntity.fromMap(Map<String, dynamic> map, String id) {
     return ClientEntity(
       id: id,
