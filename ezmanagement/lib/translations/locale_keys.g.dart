@@ -3,5 +3,6 @@
 // ignore_for_file: constant_identifier_names
 
 abstract class  LocaleKeys {
+  static const fieldIsRequired = 'fieldIsRequired';
 
 }
