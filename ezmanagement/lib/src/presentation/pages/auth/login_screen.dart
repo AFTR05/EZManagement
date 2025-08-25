@@ -1,22 +1,26 @@
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
+import 'package:ezmanagement/src/core/validators/fields_validators.dart';
+import 'package:ezmanagement/src/inject/riverpod_presentation.dart';
 import 'package:ezmanagement/src/presentation/custom_widgets/inputs/custom_auth_text_field_widget.dart';
 import 'package:ezmanagement/src/presentation/custom_widgets/logo/ez_logo_widget.dart';
 import 'package:ezmanagement/src/presentation/pages/custom_widgets/backgrounds/user_background_decoration.dart';
 import 'package:ezmanagement/src/presentation/pages/custom_widgets/buttons/custom_login_button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen>
+class _LoginScreenState extends ConsumerState<LoginScreen>
     with TickerProviderStateMixin {
-  final TextEditingController _userController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   late AnimationController _animationController;
+  final _formKey = GlobalKey<FormState>();
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
@@ -45,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   void dispose() {
-    _userController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     _animationController.dispose();
     super.dispose();
@@ -148,40 +152,46 @@ class _LoginScreenState extends State<LoginScreen>
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Column(
-                crossAxisAlignment: isSmallScreen
-                    ? CrossAxisAlignment.start
-                    : CrossAxisAlignment.center,
-                children: [
-                  CustomAuthTextFieldWidget(
-                    controller: _userController,
-                    hintText: 'Usuario',
-                    boxBorder: Border(
-                      top: BorderSide(color: borderColor, width: 0.5),
-                      right: BorderSide(color: borderColor, width: 0.5),
-                      bottom: BorderSide(color: borderColor, width: 0.25),
-                      left: BorderSide(color: borderColor, width: 0.5),
+              child: Form(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: isSmallScreen
+                      ? CrossAxisAlignment.start
+                      : CrossAxisAlignment.center,
+                  children: [
+                    CustomAuthTextFieldWidget(
+                      controller: _emailController,
+                      validator: FieldsValidators.fieldIsRequired,
+                      hintText: 'Usuario',
+                      boxBorder: Border(
+                        top: BorderSide(color: borderColor, width: 0.5),
+                        right: BorderSide(color: borderColor, width: 0.5),
+                        bottom: BorderSide(color: borderColor, width: 0.25),
+                        left: BorderSide(color: borderColor, width: 0.5),
+                      ),
+                      isTop: true,
+                      prefix: Icon(
+                        Icons.person_outline,
+                        size: isSmallScreen ? 18 : 20,
+                      ),
                     ),
-                    isTop: true,
-                    prefix: Icon(
-                      Icons.person_outline,
-                      size: isSmallScreen ? 18 : 20,
+                    CustomAuthTextFieldWidget(
+                      controller: _passwordController,
+                      validator: FieldsValidators.fieldIsRequired,
+                      hintText: 'Contraseña',
+                      boxBorder: Border(
+                        top: BorderSide(color: borderColor, width: 0.25),
+                        right: BorderSide(color: borderColor, width: 0.5),
+                        bottom: BorderSide(color: borderColor, width: 0.5),
+                        left: BorderSide(color: borderColor, width: 0.5),
+                      ),
+                      isBottom: true,
+                      isPasswordField: true,
+                      suffix: SizedBox(width: isSmallScreen ? 35 : 40),
                     ),
-                  ),
-                  CustomAuthTextFieldWidget(
-                    controller: _passwordController,
-                    hintText: 'Contraseña',
-                    boxBorder: Border(
-                      top: BorderSide(color: borderColor, width: 0.25),
-                      right: BorderSide(color: borderColor, width: 0.5),
-                      bottom: BorderSide(color: borderColor, width: 0.5),
-                      left: BorderSide(color: borderColor, width: 0.5),
-                    ),
-                    isBottom: true,
-                    isPasswordField: true,
-                    suffix: SizedBox(width: isSmallScreen ? 35 : 40),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             Positioned(
@@ -189,7 +199,7 @@ class _LoginScreenState extends State<LoginScreen>
               top: _getButtonTopPosition(isSmallScreen),
               child: CustomLoginButtonWidget(
                 isSmallScreen: isSmallScreen,
-                onTap: _handleLogin,
+                onTap: _loginValidation,
               ),
             ),
           ],
@@ -208,58 +218,20 @@ class _LoginScreenState extends State<LoginScreen>
     return isSmallScreen ? 22 : 18;
   }
 
-  void _handleLogin() {
-    if (_userController.text.trim().isEmpty ||
-        _passwordController.text.trim().isEmpty) {
-      _showErrorSnackBar('Por favor, completa todos los campos');
-      return;
+  void _loginValidation() {
+    if (_formKey.currentState?.validate() ?? false) {
+      _formKey.currentState?.save();
+      _loginAction();
     }
-
-    // Aquí iría la lógica de autenticación
-    debugPrint('Login attempt: ${_userController.text}');
-
-    // Feedback visual de éxito
-    _showSuccessSnackBar('Iniciando sesión...');
   }
 
-  void _showErrorSnackBar(String message) {
-    if (!mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.error_outline, color: Colors.white),
-            const SizedBox(width: 10),
-            Expanded(child: Text(message)),
-          ],
-        ),
-        backgroundColor: Colors.red[600],
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: const EdgeInsets.all(20),
-        duration: const Duration(seconds: 3),
-      ),
-    );
-  }
-
-  void _showSuccessSnackBar(String message) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle_outline, color: Colors.white),
-            const SizedBox(width: 10),
-            Expanded(child: Text(message)),
-          ],
-        ),
-        backgroundColor: Colors.green[600],
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: const EdgeInsets.all(20),
-        duration: const Duration(seconds: 2),
-      ),
-    );
+  Future<void> _loginAction() async {
+    await ref
+        .read(authenticationControllerProvider)
+        .loginAction(
+          email: _emailController.text.trim(), // <-- usar email
+          password: _passwordController.text,
+          context: context,
+        );
   }
 }
