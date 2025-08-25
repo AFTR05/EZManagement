@@ -14,8 +14,14 @@ class CodegenLoader extends AssetLoader{
     return Future.value(mapLocales[locale.toString()]);
   }
 
-  static const Map<String,dynamic> _en = {};
-static const Map<String,dynamic> _es = {};
-static const Map<String,dynamic> _zh = {};
+  static const Map<String,dynamic> _en = {
+  "fieldIsRequired": "Field is required"
+};
+static const Map<String,dynamic> _es = {
+  "fieldIsRequired": "El campo es requerido"
+};
+static const Map<String,dynamic> _zh = {
+  "fieldIsRequired": "此字段为必填项"
+};
 static const Map<String, Map<String,dynamic>> mapLocales = {"en": _en, "es": _es, "zh": _zh};
 }

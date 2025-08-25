@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 class RoutesApp {
   static const String index = "/";
   static const String login = "/login";
+  static const String home = "/home";
   static const String register = "/register";
 
 
@@ -13,6 +14,10 @@ static Route<dynamic> generateRoute(RouteSettings settings) {
       case index:
       case login:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
+      case home:
+        return MaterialPageRoute(builder: (_) => const Scaffold(
+          body: Center(child: Text('Home Screen')),
+        ));
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
