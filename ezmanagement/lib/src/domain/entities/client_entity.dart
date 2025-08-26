@@ -4,6 +4,7 @@ class ClientEntity with EntityMixin {
   final String id;
   final String name;
   final String email;
+  final String telephone;
   final String nit;
   final String direction;
 
@@ -13,6 +14,7 @@ class ClientEntity with EntityMixin {
     required this.email,
     required this.nit,
     required this.direction,
+    required this.telephone
   });
 
   factory ClientEntity.fromMap(Map<String, dynamic> map, String id) {
@@ -22,6 +24,7 @@ class ClientEntity with EntityMixin {
       email: map['email'] ?? '',
       nit: map['nit'] ?? '',
       direction: map['direction'] ?? '',
+      telephone: map['telephone'] ?? '',
     );
   }
 
