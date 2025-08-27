@@ -1,13 +1,14 @@
 {
   "project_info": {
-    "project_number": "1096224199835",
-    "project_id": "ezmanagement-2828",
-    "storage_bucket": "ezmanagement-2828.firebasestorage.app"
+    "project_number": "187488371361",
+    "firebase_url": "https://invumycrew-default-rtdb.firebaseio.com",
+    "project_id": "invumycrew",
+    "storage_bucket": "invumycrew.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1096224199835:android:bd0c5fd001a962c57de23e",
+        "mobilesdk_app_id": "1:187488371361:android:c88fa92c3341230c8326e0",
         "android_client_info": {
           "package_name": "com.example.ezmanagement"
         }
@@ -15,7 +16,26 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC3CtbCXgyj6VNjdP62d41xPLQ_M-W9F1s"
+          "current_key": "AIzaSyCHy-flWfysQQ8CUu3bAzlKUf5y7dqAS2g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187488371361:android:171301997919a1eb8326e0",
+        "android_client_info": {
+          "package_name": "com.example.invu_my_crew_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHy-flWfysQQ8CUu3bAzlKUf5y7dqAS2g"
         }
       ],
       "services": {
