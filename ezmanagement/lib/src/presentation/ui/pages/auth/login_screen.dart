@@ -1,10 +1,10 @@
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
 import 'package:ezmanagement/src/core/validators/fields_validators.dart';
 import 'package:ezmanagement/src/inject/riverpod_presentation.dart';
-import 'package:ezmanagement/src/presentation/custom_widgets/inputs/custom_auth_text_field_widget.dart';
-import 'package:ezmanagement/src/presentation/custom_widgets/logo/ez_logo_widget.dart';
-import 'package:ezmanagement/src/presentation/pages/custom_widgets/backgrounds/user_background_decoration.dart';
-import 'package:ezmanagement/src/presentation/pages/custom_widgets/buttons/custom_login_button_widget.dart';
+import 'package:ezmanagement/src/presentation/ui/custom_widgets/inputs/custom_auth_text_field_widget.dart';
+import 'package:ezmanagement/src/presentation/ui/custom_widgets/logo/ez_logo_widget.dart';
+import 'package:ezmanagement/src/presentation/ui/pages/custom_widgets/backgrounds/user_background_decoration.dart';
+import 'package:ezmanagement/src/presentation/ui/pages/custom_widgets/buttons/custom_login_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
