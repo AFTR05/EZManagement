@@ -1,5 +1,6 @@
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
 import 'package:ezmanagement/src/core/validators/fields_validators.dart';
+import 'package:ezmanagement/src/inject/app_states/auth_loading_provider.dart';
 import 'package:ezmanagement/src/inject/riverpod_presentation.dart';
 import 'package:ezmanagement/src/presentation/ui/custom_widgets/inputs/custom_auth_text_field_widget.dart';
 import 'package:ezmanagement/src/presentation/ui/custom_widgets/logo/ez_logo_widget.dart';
@@ -63,6 +64,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     final isSmallScreen = width < 400;
     final isMediumScreen = width >= 400 && width < 600;
     final isTablet = width >= 600;
+    final isLoading = ref.watch(authLoadingProvider);
 
     return Scaffold(
       body: Stack(
@@ -110,6 +112,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
               ),
             ),
           ),
+          if (isLoading)
+            Positioned.fill(
+              child: AbsorbPointer(
+                absorbing: true,
+                child: ColoredBox(
+                  color: Colors.black.withValues(alpha: 0.4),
+                  child: Center(
+                    child: SizedBox(
+                      height: 48,
+                      width: 48,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 4,
+                        color: EZColorsApp.ezAppColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

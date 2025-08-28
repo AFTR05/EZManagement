@@ -43,7 +43,7 @@ class _EZManagementAppState extends State<EZManagementApp> {
               locale: context.locale,
               title: EnvironmentConfig.nameApp,
               darkTheme: AppTheme.darkTheme,
-              themeMode: ThemeMode.light,
+              themeMode: ThemeMode.dark,
               navigatorObservers: [NavigationService.myTransitionObserver],
               theme: AppTheme.lightTheme,
               initialRoute: RoutesApp.login,
