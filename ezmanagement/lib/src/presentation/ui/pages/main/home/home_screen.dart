@@ -1,12 +1,272 @@
+import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text("Home Screen"),
+    final screenHeight = MediaQuery.of(context).size.height;
+    
+    return Scaffold(
+      backgroundColor: Colors.grey[50],
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(context, screenHeight),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                margin: const EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Gestión Principal',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontFamily: 'OpenSansHebrew',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 25),
+                      _buildMenuGrid(),
+                      const SizedBox(height: 30),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
+
+  Widget _buildHeader(BuildContext context, double screenHeight) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.only(
+        top: screenHeight * 0.06,
+        left: 30,
+        right: 30,
+        bottom: screenHeight * 0.08,
+      ),
+      decoration: BoxDecoration(
+        color: EZColorsApp.ezAppColor,
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: EZColorsApp.ezAppColor.withValues(alpha: .3),
+            spreadRadius: 0,
+            blurRadius: 20,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Hola, Juan',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontFamily: 'OpenSansHebrew',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: .1),
+                    borderRadius: BorderRadius.circular(15),
+                ),
+                child: SvgPicture.asset(
+                  'assets/images/ez_logo.svg',
+                  width: 60,
+                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMenuGrid() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: _buildEnhancedMenuButton(
+                icon: PhosphorIconsFill.package,
+                text: 'Productos',
+                subtitle: 'Gestionar inventario',
+                color: EZColorsApp.ezAppColor,
+                onTap: () => print('Productos presionado'),
+              ),
+            ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: _buildEnhancedMenuButton(
+                icon: Icons.assignment,
+                text: 'Materiales',
+                subtitle: 'Control de stock',
+                color: EZColorsApp.ezAppColor,
+                onTap: () => print('Materiales presionado'),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 15),
+        _buildEnhancedMenuButton(
+          icon: PhosphorIconsFill.chartBar,
+          text: 'Registro de Ventas',
+          subtitle: 'Análisis y reportes',
+          color: EZColorsApp.ezAppColor,
+          isFullWidth: true,
+          onTap: () => print('Registro de Ventas presionado'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEnhancedMenuButton({
+    required IconData icon,
+    required String text,
+    required String subtitle,
+    required Color color,
+    required VoidCallback onTap,
+    bool isFullWidth = false,
+  }) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: isFullWidth ? double.infinity : null,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: color.withValues(alpha: .1), width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: color.withValues(alpha: .08),
+                spreadRadius: 0,
+                blurRadius: 15,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: isFullWidth
+              ? Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: .1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(icon, color: color, size: 32),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            text,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontFamily: 'OpenSansHebrew',
+                              fontWeight: FontWeight.bold,
+                              color: EZColorsApp.darkColorText,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            subtitle,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: 'OpenSansHebrew',
+                              fontWeight: FontWeight.w400,
+                              color: EZColorsApp.grayColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: EZColorsApp.grayColor,
+                      size: 16,
+                    ),
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: .1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(icon, color: color, size: 28),
+                    ),
+                    const SizedBox(height: 15),
+                    Text(
+                      text,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'OpenSansHebrew',
+                        fontWeight: FontWeight.bold,
+                        color: EZColorsApp.darkColorText,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontFamily: 'OpenSansHebrew',
+                        fontWeight: FontWeight.w400,
+                        color: EZColorsApp.grayColor,
+                      ),
+                    ),
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+
+
 }
