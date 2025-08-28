@@ -9,6 +9,7 @@ part 'riverpod_presentation.g.dart';
 @riverpod
 AuthenticationController authenticationController(Ref ref){
   return AuthenticationController(
+    ref: ref,
     authenticationUsecase: ref.watch(authenticationUsecaseProvider),
   );
 }
