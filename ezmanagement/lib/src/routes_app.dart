@@ -1,5 +1,6 @@
 import 'package:ezmanagement/src/presentation/ui/pages/auth/login_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/main_screen.dart';
+import 'package:ezmanagement/src/presentation/ui/pages/main/profile/profile_edit_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -8,6 +9,7 @@ class RoutesApp {
   static const String login = "/login";
   static const String home = "/home";
   static const String register = "/register";
+  static const String editProfile = "/edit-profile";
 
 
 static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -17,6 +19,8 @@ static Route<dynamic> generateRoute(RouteSettings settings) {
         return MaterialPageRoute(builder: (_) => const LoginScreen());
       case home:
         return MaterialPageRoute(builder: (_) => const MainScreen());
+      case editProfile: 
+        return MaterialPageRoute(builder: (_) => const ProfileEditScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
