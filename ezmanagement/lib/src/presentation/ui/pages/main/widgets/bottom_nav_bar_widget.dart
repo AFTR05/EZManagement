@@ -16,16 +16,6 @@ class BottomNavBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 50, left: 20, right: 20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -2),
-          ),
-        ],
-      ),
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(12)),
         child: BottomNavigationBar(

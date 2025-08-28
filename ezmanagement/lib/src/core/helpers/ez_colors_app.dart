@@ -20,6 +20,8 @@ class EZColorsApp {
   static const Color blueOcean = Color(0xFF247BC3);
   static const Color darkBackgroud = Color(0xFF1E1E1E);
   static const Color grayColor = Color(0xFF696969);
+  static const Color textDarkColor = Color.fromRGBO(36, 36, 37, 1);
+  static const Color darkColorText = Color.fromRGBO(30, 30, 30, 1);
 
 
 
