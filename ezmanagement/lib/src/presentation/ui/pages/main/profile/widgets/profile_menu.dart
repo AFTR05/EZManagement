@@ -1,9 +1,11 @@
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/dialogs/logout_confirmation_dialog.dart';
+import 'package:ezmanagement/translations/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
-
 
 class ProfileMenuItem {
   final String label;
@@ -20,7 +22,6 @@ class ProfileMenuItem {
     this.isLogout = false,
   });
 }
-
 
 class ProfileMenuTile extends StatelessWidget {
   final ProfileMenuItem item;
@@ -53,26 +54,24 @@ Future<void> _showLogoutBottomSheet(BuildContext context) async {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       leading: CircleAvatar(
         radius: 20,
         backgroundColor: iconColor.withValues(alpha: 0.15),
         child: item.iconAsset != null
             ? (item.iconAsset!.endsWith('.svg')
-                ? SvgPicture.asset(
-                    item.iconAsset!,
-                    width: 22,
-                    height: 22,
-                    colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-                  )
-                : Image.asset(
-                    item.iconAsset!,
-                    width: 22,
-                    height: 22,
-                    color: iconColor,
-                  ))
+                  ? SvgPicture.asset(
+                      item.iconAsset!,
+                      width: 22,
+                      height: 22,
+                      colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                    )
+                  : Image.asset(
+                      item.iconAsset!,
+                      width: 22,
+                      height: 22,
+                      color: iconColor,
+                    ))
             : Icon(item.icon, color: iconColor, size: 22),
       ),
       title: Text(
@@ -92,17 +91,17 @@ Future<void> _showLogoutBottomSheet(BuildContext context) async {
               size: 20,
             ),
       onTap: () {
-        if (item.isLogout) {
-          _showLogoutBottomSheet(context); 
+        if (item.isLogout) {  _showLogoutBottomSheet(context); 
         } else if (item.route != null) {
           Navigator.pushNamed(context, item.route!);
-        }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(LocaleKeys.profileMenuLoggingOutSnack.tr())),
+          );}
       },
       contentPadding: const EdgeInsets.symmetric(horizontal: 20),
     );
   }
 }
-
 
 class ProfileMenu extends StatelessWidget {
   final Color textColor;
@@ -113,8 +112,7 @@ class ProfileMenu extends StatelessWidget {
     required this.textColor,
     required this.iconColor,
   });
-
-  List<ProfileMenuItem> get menuItems => const [
+List<ProfileMenuItem> get menuItems => const [
         ProfileMenuItem(
           label: 'Perfil',
           iconAsset: 'assets/images/icons/user_icon.svg',
@@ -141,7 +139,6 @@ class ProfileMenu extends StatelessWidget {
           isLogout: true,
         ),
       ];
-
   @override
   Widget build(BuildContext context) {
     return ListView.separated(

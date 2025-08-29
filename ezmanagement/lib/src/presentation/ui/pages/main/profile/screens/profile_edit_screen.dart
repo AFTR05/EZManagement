@@ -4,8 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:ezmanagement/translations/locale_keys.g.dart';
 
 class ProfileEditScreen extends ConsumerStatefulWidget {
   const ProfileEditScreen({super.key});
@@ -29,12 +30,8 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     final XFile? pickedFile =
         await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      setState(() {
-        profileImage = pickedFile;
-      });
-      if (mounted) {
-        Navigator.of(context).pop();
-      }
+      setState(() => profileImage = pickedFile);
+      if (mounted) Navigator.of(context).pop();
     }
   }
 
@@ -56,40 +53,31 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   Widget build(BuildContext context) {
     final isDarkmode = Theme.of(context).brightness == Brightness.dark;
 
-    Widget profileImageWidget;
-    if (profileImage != null) {
-      profileImageWidget = CircleAvatar(
-        radius: 50,
-        backgroundImage: FileImage(File(profileImage!.path)),
-        backgroundColor: EZColorsApp.ezAppColor.withValues(alpha: 0.08),
-      );
-    } else {
-      profileImageWidget = CircleAvatar(
-        radius: 50,
-        backgroundImage: const AssetImage('assets/images/profile.jpg'),
-        backgroundColor: EZColorsApp.ezAppColor.withValues(alpha: 0.08),
-      );
-    }
+    final profileImageWidget = profileImage != null
+        ? CircleAvatar(
+            radius: 50,
+            backgroundImage: FileImage(File(profileImage!.path)),
+            backgroundColor: EZColorsApp.ezAppColor.withValues(alpha: 0.08),
+          )
+        : CircleAvatar(
+            radius: 50,
+            backgroundImage: const AssetImage('assets/images/profile.jpg'),
+            backgroundColor: EZColorsApp.ezAppColor.withValues(alpha: 0.08),
+          );
 
     return Scaffold(
-      backgroundColor:
-          isDarkmode ? EZColorsApp.darkBackgroud : Colors.white, 
+      backgroundColor: isDarkmode ? EZColorsApp.darkBackgroud : Colors.white,
       appBar: AppBar(
-        backgroundColor:
-            isDarkmode ? EZColorsApp.darkBackgroud : Colors.white, 
+        backgroundColor: isDarkmode ? EZColorsApp.darkBackgroud : Colors.white,
         elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
         leading: IconButton(
-          icon: SvgPicture.asset(
-            'assets/images/icons/return_icon.svg',
-            width: 28,
-            height: 28,
-          ),
+          icon: SvgPicture.asset('assets/images/icons/return_icon.svg', width: 28, height: 28),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          "Perfil",
+          LocaleKeys.profileLabel.tr(),
           style: TextStyle(
             fontFamily: 'OpenSansHebrew',
             color: EZColorsApp.ezAppColor,
@@ -117,11 +105,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                         child: CircleAvatar(
                           radius: 18,
                           backgroundColor: EZColorsApp.ezAppColor,
-                          child: const Icon(
-                            PhosphorIconsBold.pencilSimple,
-                            color: Colors.white,
-                            size: 20,
-                          ),
+                          child: const Icon(PhosphorIconsBold.pencilSimple, color: Colors.white, size: 20),
                         ),
                       ),
                     ),
@@ -129,17 +113,17 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                 ),
               ),
               buildLabel(
-                "Nombre Completo",
-                isDarkmode ? Colors.white : Colors.black87, 
+                LocaleKeys.profileEditFullNameLabel.tr(),
+                isDarkmode ? Colors.white : Colors.black87,
               ),
               buildInput(
                 initialValue: name,
-                inputBg: EZColorsApp.ezAppColor.withValues(alpha: 0.08), 
-                textColor: isDarkmode ? Colors.white : Colors.black87, 
+                inputBg: EZColorsApp.ezAppColor.withValues(alpha: 0.08),
+                textColor: isDarkmode ? Colors.white : Colors.black87,
                 onChanged: (val) => name = val,
               ),
               buildLabel(
-                "Número De Teléfono",
+                LocaleKeys.profileEditPhoneLabel.tr(),
                 isDarkmode ? Colors.white : Colors.black87,
               ),
               buildInput(
@@ -150,7 +134,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                 onChanged: (val) => phone = val,
               ),
               buildLabel(
-                "Correo Electrónico",
+                LocaleKeys.profileEditEmailLabel.tr(),
                 isDarkmode ? Colors.white : Colors.black87,
               ),
               buildInput(
@@ -161,28 +145,28 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                 onChanged: (val) => email = val,
               ),
               buildLabel(
-                "Fecha De Nacimiento",
+                LocaleKeys.profileEditBirthdayLabel.tr(),
                 isDarkmode ? Colors.white : Colors.black87,
               ),
               buildDateInput(
                 context,
-                EZColorsApp.ezAppColor.withValues(alpha: 0.08), 
+                EZColorsApp.ezAppColor.withValues(alpha: 0.08),
                 isDarkmode ? Colors.white : Colors.black87,
               ),
+
               const SizedBox(height: 30),
+
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: EZColorsApp.ezAppColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     padding: const EdgeInsets.symmetric(vertical: 13),
                   ),
-                  child: const Text(
-                    "Actualizar Perfil",
-                    style: TextStyle(
+                  child: Text(
+                    LocaleKeys.profileEditUpdateButton.tr(),
+                    style: const TextStyle(
                       fontFamily: 'OpenSansHebrew',
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -192,11 +176,11 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   onPressed: () {
                     setState(() {});
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Datos actualizados")),
+                      SnackBar(content: Text(LocaleKeys.profileEditUpdatedSnack.tr())),
                     );
                   },
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -233,20 +217,12 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       initialValue: initialValue,
       keyboardType: keyboardType,
       onChanged: onChanged,
-      style: TextStyle(
-        fontFamily: 'OpenSansHebrew',
-        fontSize: 15,
-        color: textColor,
-      ),
+      style: TextStyle(fontFamily: 'OpenSansHebrew', fontSize: 15, color: textColor),
       decoration: InputDecoration(
         filled: true,
         fillColor: inputBg,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide.none,
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
       ),
     );
   }
@@ -263,37 +239,24 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
             data: Theme.of(context).copyWith(
               colorScheme: ColorScheme.light(primary: EZColorsApp.ezAppColor),
               textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                  foregroundColor: EZColorsApp.ezAppColor,
-                ),
+                style: TextButton.styleFrom(foregroundColor: EZColorsApp.ezAppColor),
               ),
             ),
             child: child!,
           ),
         );
-        if (picked != null) {
-          setState(() {
-            birthday = picked;
-          });
-        }
+        if (picked != null) setState(() => birthday = picked);
       },
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: inputBg,
-          borderRadius: BorderRadius.circular(10),
-        ),
+        decoration: BoxDecoration(color: inputBg, borderRadius: BorderRadius.circular(10)),
         alignment: Alignment.centerLeft,
         child: Text(
           birthday != null
               ? '${birthday!.day.toString().padLeft(2, '0')} / ${birthday!.month.toString().padLeft(2, '0')} / ${birthday!.year}'
-              : 'Seleccionar fecha',
-          style: TextStyle(
-            fontFamily: 'OpenSansHebrew',
-            fontSize: 15,
-            color: textColor,
-          ),
+              : LocaleKeys.profileEditSelectDate.tr(), // "Seleccionar fecha"
+          style: TextStyle(fontFamily: 'OpenSansHebrew', fontSize: 15, color: textColor),
         ),
       ),
     );
@@ -319,14 +282,14 @@ class _ModalContent extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: modalBg,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
       height: 160,
       child: Column(
         children: [
           Text(
-            "Actualizar foto de perfil",
+            LocaleKeys.profileEditUpdatePhotoTitle.tr(), // "Actualizar foto de perfil"
             style: TextStyle(
               fontFamily: 'OpenSansHebrew',
               fontSize: 18,
@@ -337,12 +300,9 @@ class _ModalContent extends StatelessWidget {
           const SizedBox(height: 20),
           ElevatedButton.icon(
             icon: const Icon(Icons.photo_library),
-            label: const Text(
-              "Seleccionar imagen",
-              style: TextStyle(
-                fontFamily: 'OpenSansHebrew',
-                color: Colors.white,
-              ),
+            label: Text(
+              LocaleKeys.profileEditSelectImageButton.tr(), // "Seleccionar imagen"
+              style: const TextStyle(fontFamily: 'OpenSansHebrew', color: Colors.white),
             ),
             style: ElevatedButton.styleFrom(backgroundColor: mainBlue),
             onPressed: onPickImage,
@@ -354,11 +314,8 @@ class _ModalContent extends StatelessWidget {
             ),
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
-              "Cancelar",
-              style: TextStyle(
-                fontFamily: 'OpenSansHebrew',
-                color: textColor,
-              ),
+              LocaleKeys.profileEditCancelButton.tr(), // "Cancelar"
+              style: TextStyle(fontFamily: 'OpenSansHebrew', color: textColor),
             ),
           ),
         ],

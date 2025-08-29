@@ -8,6 +8,8 @@ import 'package:ezmanagement/src/presentation/ui/pages/custom_widgets/background
 import 'package:ezmanagement/src/presentation/ui/pages/custom_widgets/buttons/custom_login_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:ezmanagement/translations/locale_keys.g.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -140,7 +142,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Text(
-        'Inicio de sesión',
+        LocaleKeys.loginTitle.tr(),
         style: TextStyle(
           fontSize: isSmallScreen ? 24 : 28,
           fontWeight: FontWeight.w700,
@@ -184,7 +186,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                     CustomAuthTextFieldWidget(
                       controller: _emailController,
                       validator: FieldsValidators.fieldIsRequired,
-                      hintText: 'Usuario',
+                      hintText: LocaleKeys.loginUserHint.tr(),
                       boxBorder: Border(
                         top: BorderSide(color: borderColor, width: 0.5),
                         right: BorderSide(color: borderColor, width: 0.5),
@@ -200,7 +202,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                     CustomAuthTextFieldWidget(
                       controller: _passwordController,
                       validator: FieldsValidators.fieldIsRequired,
-                      hintText: 'Contraseña',
+                      hintText: LocaleKeys.loginPasswordHint.tr(),
                       boxBorder: Border(
                         top: BorderSide(color: borderColor, width: 0.25),
                         right: BorderSide(color: borderColor, width: 0.5),
@@ -250,7 +252,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     await ref
         .read(authenticationControllerProvider)
         .loginAction(
-          email: _emailController.text.trim(), // <-- usar email
+          email: _emailController.text.trim(),
           password: _passwordController.text,
           context: context,
         );

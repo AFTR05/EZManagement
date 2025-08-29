@@ -2,16 +2,20 @@ import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:ezmanagement/translations/locale_keys.g.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  // Responsive font: base size -> scaled by shortestSide and textScaleFactor.
-  double _rf(BuildContext context, double base,
-      {double min = 12, double max = 34}) {
+  double _rf(
+    BuildContext context,
+    double base, {
+    double min = 12,
+    double max = 34,
+  }) {
     final size = MediaQuery.of(context).size;
     final shortest = size.shortestSide;
-    // Escala suave (375 = base iPhone 11/12/13)
     final geomScale = (shortest / 375).clamp(0.85, 1.35);
     final sysScale = MediaQuery.of(context).textScaleFactor.clamp(0.8, 1.4);
     final v = base * geomScale * sysScale;
@@ -31,7 +35,10 @@ class HomeScreen extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 20),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 30,
+                ),
                 decoration: BoxDecoration(
                   color: Theme.of(context).brightness == Brightness.dark
                       ? EZColorsApp.darkBackgroud
@@ -46,7 +53,7 @@ class HomeScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Gestión Principal',
+                        LocaleKeys.homeMainTitle.tr(), // 🔑 Gestión Principal
                         style: TextStyle(
                           fontSize: _rf(context, 22, min: 16, max: 28),
                           fontFamily: 'OpenSansHebrew',
@@ -97,9 +104,9 @@ class HomeScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // título
           Text(
-            'Hola, Juan',
+            // 🔑 Hola, {name}
+            LocaleKeys.homeHeaderHello.tr(namedArgs: {"name": "Juan"}),
             style: TextStyle(
               color: Colors.white,
               fontSize: _rf(context, 28, min: 20, max: 34),
@@ -116,7 +123,10 @@ class HomeScreen extends StatelessWidget {
             child: SvgPicture.asset(
               'assets/images/ez_logo.svg',
               width: 60,
-              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(
+                Colors.white,
+                BlendMode.srcIn,
+              ),
             ),
           ),
         ],
@@ -132,8 +142,9 @@ class HomeScreen extends StatelessWidget {
             Expanded(
               child: _buildEnhancedMenuButton(
                 icon: PhosphorIconsFill.package,
-                text: 'Productos',
-                subtitle: 'Gestionar inventario',
+                text: LocaleKeys.homeProductsTitle.tr(), // 🔑 Productos
+                subtitle: LocaleKeys.homeProductsSubtitle
+                    .tr(), // 🔑 Gestionar inventario
                 color: EZColorsApp.ezAppColor,
                 context: context,
                 onTap: () => debugPrint('Productos presionado'),
@@ -143,10 +154,11 @@ class HomeScreen extends StatelessWidget {
             Expanded(
               child: _buildEnhancedMenuButton(
                 icon: Icons.assignment,
-                text: 'Materiales',
-                context: context,
-                subtitle: 'Control de stock',
+                text: LocaleKeys.homeMaterialsTitle.tr(), // 🔑 Materiales
+                subtitle: LocaleKeys.homeMaterialsSubtitle
+                    .tr(), // 🔑 Control de stock
                 color: EZColorsApp.ezAppColor,
+                context: context,
                 onTap: () => debugPrint('Materiales presionado'),
               ),
             ),
@@ -155,10 +167,10 @@ class HomeScreen extends StatelessWidget {
         const SizedBox(height: 15),
         _buildEnhancedMenuButton(
           icon: PhosphorIconsFill.chartBar,
-          text: 'Registro de Ventas',
-          context: context,
-          subtitle: 'Análisis y reportes',
+          text: LocaleKeys.homeSalesTitle.tr(), // 🔑 Registro de Ventas
+          subtitle: null,
           color: EZColorsApp.ezAppColor,
+          context: context,
           isFullWidth: true,
           onTap: () => debugPrint('Registro de Ventas presionado'),
         ),
@@ -169,7 +181,7 @@ class HomeScreen extends StatelessWidget {
   Widget _buildEnhancedMenuButton({
     required IconData icon,
     required String text,
-    required String subtitle,
+    required String? subtitle,
     required Color color,
     required VoidCallback onTap,
     required BuildContext context,
@@ -193,8 +205,9 @@ class HomeScreen extends StatelessWidget {
               BoxShadow(
                 color: color.withValues(alpha: .08),
                 spreadRadius: 0,
-                blurRadius:
-                    Theme.of(context).brightness == Brightness.dark ? 0 : 15,
+                blurRadius: Theme.of(context).brightness == Brightness.dark
+                    ? 0
+                    : 15,
                 offset: Offset(
                   0,
                   Theme.of(context).brightness == Brightness.dark ? 0 : 5,
@@ -224,27 +237,33 @@ class HomeScreen extends StatelessWidget {
                               fontSize: _rf(context, 18, min: 14, max: 22),
                               fontFamily: 'OpenSansHebrew',
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).brightness ==
+                              color:
+                                  Theme.of(context).brightness ==
                                       Brightness.dark
                                   ? Colors.white
                                   : EZColorsApp.darkColorText,
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            subtitle,
-                            style: TextStyle(
-                              fontSize: _rf(context, 14, min: 12, max: 18),
-                              fontFamily: 'OpenSansHebrew',
-                              fontWeight: FontWeight.w400,
-                              color: EZColorsApp.grayColor,
+                          if (subtitle != null) ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              subtitle,
+                              style: TextStyle(
+                                fontSize: _rf(context, 14, min: 12, max: 18),
+                                fontFamily: 'OpenSansHebrew',
+                                fontWeight: FontWeight.w400,
+                                color: EZColorsApp.grayColor,
+                              ),
                             ),
-                          ),
+                          ],
                         ],
                       ),
                     ),
-                    Icon(Icons.arrow_forward_ios,
-                        color: EZColorsApp.grayColor, size: 16),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: EZColorsApp.grayColor,
+                      size: 16,
+                    ),
                   ],
                 )
               : Column(
@@ -270,16 +289,18 @@ class HomeScreen extends StatelessWidget {
                             : EZColorsApp.darkColorText,
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: _rf(context, 12, min: 10, max: 16),
-                        fontFamily: 'OpenSansHebrew',
-                        fontWeight: FontWeight.w400,
-                        color: EZColorsApp.grayColor,
+                    if (subtitle != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        style: TextStyle(
+                          fontSize: _rf(context, 12, min: 10, max: 16),
+                          fontFamily: 'OpenSansHebrew',
+                          fontWeight: FontWeight.w400,
+                          color: EZColorsApp.grayColor,
+                        ),
                       ),
-                    ),
+                    ],
                   ],
                 ),
         ),
