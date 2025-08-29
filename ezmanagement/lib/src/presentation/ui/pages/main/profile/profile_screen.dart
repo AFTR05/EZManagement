@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/profile_header.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/profile_menu.dart';
+import 'package:ezmanagement/translations/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
 
@@ -10,10 +12,8 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final backgroundColor =
-        isDark ? EZColorsApp.darkBackgroud : Colors.white;
-    final titleColor =
-        isDark ? EZColorsApp.ezAppColor : EZColorsApp.blueOcean;
+    final backgroundColor = isDark ? EZColorsApp.darkBackgroud : Colors.white;
+    final titleColor = isDark ? EZColorsApp.ezAppColor : EZColorsApp.blueOcean;
     final textColor = isDark ? Colors.white : Colors.black87;
 
     return Scaffold(
@@ -24,7 +24,7 @@ class ProfileScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text(
-          'Mi Perfil',
+          LocaleKeys.profileTitle.tr(),
           style: TextStyle(
             fontFamily: 'OpenSansHebrew',
             color: titleColor,
@@ -35,13 +35,8 @@ class ProfileScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          ProfileHeader(
-            textColor: textColor,
-          ),
-          ProfileMenu(
-            textColor: textColor,
-            iconColor: EZColorsApp.blueOcean,
-          ),
+          ProfileHeader(textColor: textColor),
+          ProfileMenu(textColor: textColor, iconColor: EZColorsApp.blueOcean),
         ],
       ),
     );

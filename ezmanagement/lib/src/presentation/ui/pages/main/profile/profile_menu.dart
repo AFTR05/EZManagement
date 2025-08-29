@@ -1,8 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:ezmanagement/translations/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
-
 
 class ProfileMenuItem {
   final String label;
@@ -19,7 +20,6 @@ class ProfileMenuItem {
   });
 }
 
-
 class ProfileMenuTile extends StatelessWidget {
   final ProfileMenuItem item;
   final Color textColor;
@@ -35,26 +35,24 @@ class ProfileMenuTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       leading: CircleAvatar(
         radius: 20,
-        backgroundColor: iconColor.withValues(alpha:0.15),
+        backgroundColor: iconColor.withValues(alpha: 0.15),
         child: item.iconAsset != null
             ? (item.iconAsset!.endsWith('.svg')
-                ? SvgPicture.asset(
-                    item.iconAsset!,
-                    width: 22,
-                    height: 22,
-                    colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-                  )
-                : Image.asset(
-                    item.iconAsset!,
-                    width: 22,
-                    height: 22,
-                    color: iconColor,
-                  ))
+                  ? SvgPicture.asset(
+                      item.iconAsset!,
+                      width: 22,
+                      height: 22,
+                      colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                    )
+                  : Image.asset(
+                      item.iconAsset!,
+                      width: 22,
+                      height: 22,
+                      color: iconColor,
+                    ))
             : Icon(item.icon, color: iconColor, size: 22),
       ),
       title: Text(
@@ -70,7 +68,7 @@ class ProfileMenuTile extends StatelessWidget {
           ? null
           : Icon(
               PhosphorIconsBold.caretRight,
-              color: EZColorsApp.blueOcean.withValues(alpha: 0.6), 
+              color: EZColorsApp.blueOcean.withValues(alpha: 0.6),
               size: 20,
             ),
       onTap: () {
@@ -79,7 +77,7 @@ class ProfileMenuTile extends StatelessWidget {
         }
         if (item.isLogout) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Cerrando sesión...")),
+            SnackBar(content: Text(LocaleKeys.profileMenuLoggingOutSnack.tr())),
           );
         }
       },
@@ -87,7 +85,6 @@ class ProfileMenuTile extends StatelessWidget {
     );
   }
 }
-
 
 class ProfileMenu extends StatelessWidget {
   final Color textColor;
@@ -99,34 +96,34 @@ class ProfileMenu extends StatelessWidget {
     required this.iconColor,
   });
 
-  List<ProfileMenuItem> get menuItems => const [
-        ProfileMenuItem(
-          label: 'Perfil',
-          iconAsset: 'assets/images/icons/user_icon.svg',
-          route: '/edit-profile',
-        ),
-        ProfileMenuItem(
-          label: 'Favoritos',
-          icon: PhosphorIconsBold.heart,
-          route: '/favorites',
-        ),
-        ProfileMenuItem(
-          label: 'Política de Privacidad',
-          iconAsset: 'assets/images/icons/password_icon.svg',
-          route: '/privacy-policy',
-        ),
-        ProfileMenuItem(
-          label: 'Configuración',
-          icon: PhosphorIconsBold.gear,
-          route: '/settings',
-        ),
-        ProfileMenuItem(
-          label: 'Cerrar Sesión',
-          icon: PhosphorIconsBold.signOut,
-          isLogout: true,
-          route: '/logout',
-        ),
-      ];
+  List<ProfileMenuItem> get menuItems => [
+    ProfileMenuItem(
+      label: LocaleKeys.profileLabel.tr(),
+      iconAsset: 'assets/images/icons/user_icon.svg',
+      route: '/edit-profile',
+    ),
+    ProfileMenuItem(
+      label: LocaleKeys.profileMenuFavoritesLabel.tr(),
+      icon: PhosphorIconsBold.heart,
+      route: '/favorites',
+    ),
+    ProfileMenuItem(
+      label: LocaleKeys.profileMenuPrivacyPolicyLabel.tr(),
+      iconAsset: 'assets/images/icons/password_icon.svg',
+      route: '/privacy-policy',
+    ),
+    ProfileMenuItem(
+      label: LocaleKeys.profileMenuSettingsLabel.tr(),
+      icon: PhosphorIconsBold.gear,
+      route: '/settings',
+    ),
+    ProfileMenuItem(
+      label: LocaleKeys.profileMenuLogoutLabel.tr(),
+      icon: PhosphorIconsBold.signOut,
+      isLogout: true,
+      route: '/logout',
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
