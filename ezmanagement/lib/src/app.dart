@@ -1,13 +1,14 @@
 import 'dart:ui';
-
 import 'package:bmprogresshud/progresshud.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:ezmanagement/environment_config.dart';
+import 'package:ezmanagement/src/inject/app_states/theme_provider.dart';
 import 'package:ezmanagement/src/routes_app.dart';
 import 'package:ezmanagement/src/utils/navigation_service.dart';
 import 'package:ezmanagement/src/utils/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CustomScrollBehavior extends MaterialScrollBehavior {
   @override
@@ -18,16 +19,19 @@ class CustomScrollBehavior extends MaterialScrollBehavior {
   };
 }
 
-class EZManagementApp extends StatefulWidget {
+class EZManagementApp extends ConsumerStatefulWidget {
   const EZManagementApp({super.key});
 
   @override
-  State<EZManagementApp> createState() => _EZManagementAppState();
+  ConsumerState<EZManagementApp> createState() => _EZManagementAppState();
 }
 
-class _EZManagementAppState extends State<EZManagementApp> {
+class _EZManagementAppState extends ConsumerState<EZManagementApp> {
   @override
   Widget build(BuildContext context) {
+    // Aquí lees el ThemeMode desde Riverpod
+    final themeMode = ref.watch(themeAppProvider);
+
     return ProgressHud(
       isGlobalHud: true,
       child: AbsorbPointer(
@@ -42,10 +46,10 @@ class _EZManagementAppState extends State<EZManagementApp> {
               supportedLocales: context.supportedLocales,
               locale: context.locale,
               title: EnvironmentConfig.nameApp,
+              theme: AppTheme.lightTheme,      
               darkTheme: AppTheme.darkTheme,
-              themeMode: ThemeMode.light,
+              themeMode: themeMode,            
               navigatorObservers: [NavigationService.myTransitionObserver],
-              theme: AppTheme.lightTheme,
               initialRoute: RoutesApp.login,
               onGenerateRoute: RoutesApp.generateRoute,
             ),
@@ -55,5 +59,3 @@ class _EZManagementAppState extends State<EZManagementApp> {
     );
   }
 }
-
-class ColorsApp {}

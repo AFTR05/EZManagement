@@ -1,7 +1,7 @@
 import 'package:ezmanagement/src/presentation/providers_ui/bottom_nav_bar_state.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/calendar/calendar_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/home/home_screen.dart';
-import 'package:ezmanagement/src/presentation/ui/pages/main/profile/profile_screen.dart';
+import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/profile_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/report/report_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/widgets/bottom_nav_bar_widget.dart';
 import 'package:flutter/material.dart';
