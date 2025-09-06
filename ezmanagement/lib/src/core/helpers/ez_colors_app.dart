@@ -22,7 +22,7 @@ class EZColorsApp {
   static const Color grayColor = Color(0xFF696969);
   static const Color textDarkColor = Color.fromRGBO(36, 36, 37, 1);
   static const Color darkColorText = Color.fromRGBO(30, 30, 30, 1);
-
+  static const Color darkGray = Color(0xFF242425);
 
 
 }

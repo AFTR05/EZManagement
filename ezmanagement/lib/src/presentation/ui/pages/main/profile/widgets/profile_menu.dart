@@ -1,3 +1,4 @@
+import 'package:ezmanagement/src/presentation/ui/pages/main/profile/dialogs/logout_confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -10,6 +11,7 @@ class ProfileMenuItem {
   final String? iconAsset;
   final String? route;
   final bool isLogout;
+
   const ProfileMenuItem({
     required this.label,
     this.icon,
@@ -32,6 +34,22 @@ class ProfileMenuTile extends StatelessWidget {
     required this.iconColor,
   });
 
+Future<void> _showLogoutBottomSheet(BuildContext context) async {
+  final confirmed = await showModalBottomSheet<bool>(
+    context: context,
+    isDismissible: false,
+    isScrollControlled: false,
+    backgroundColor: Colors.transparent,
+    barrierColor: EZColorsApp.ezAppColor.withValues(alpha: 0.8),
+    builder: (_) => const LogoutConfirmationDialog(),
+  );
+
+    if (confirmed == true) {
+      // Logica real
+      Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -40,7 +58,7 @@ class ProfileMenuTile extends StatelessWidget {
       ),
       leading: CircleAvatar(
         radius: 20,
-        backgroundColor: iconColor.withValues(alpha:0.15),
+        backgroundColor: iconColor.withValues(alpha: 0.15),
         child: item.iconAsset != null
             ? (item.iconAsset!.endsWith('.svg')
                 ? SvgPicture.asset(
@@ -70,17 +88,14 @@ class ProfileMenuTile extends StatelessWidget {
           ? null
           : Icon(
               PhosphorIconsBold.caretRight,
-              color: EZColorsApp.blueOcean.withValues(alpha: 0.6), 
+              color: EZColorsApp.blueOcean.withValues(alpha: 0.6),
               size: 20,
             ),
       onTap: () {
-        if (item.route != null) {
-          Navigator.pushNamed(context, item.route!);
-        }
         if (item.isLogout) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Cerrando sesión...")),
-          );
+          _showLogoutBottomSheet(context); 
+        } else if (item.route != null) {
+          Navigator.pushNamed(context, item.route!);
         }
       },
       contentPadding: const EdgeInsets.symmetric(horizontal: 20),
@@ -118,13 +133,12 @@ class ProfileMenu extends StatelessWidget {
         ProfileMenuItem(
           label: 'Configuración',
           icon: PhosphorIconsBold.gear,
-          route: '/settings',
+          route: '/config',
         ),
         ProfileMenuItem(
           label: 'Cerrar Sesión',
           icon: PhosphorIconsBold.signOut,
           isLogout: true,
-          route: '/logout',
         ),
       ];
 

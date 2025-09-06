@@ -1,5 +1,5 @@
-import 'package:ezmanagement/src/presentation/ui/pages/main/profile/profile_header.dart';
-import 'package:ezmanagement/src/presentation/ui/pages/main/profile/profile_menu.dart';
+import 'package:ezmanagement/src/presentation/ui/pages/main/profile/widgets/profile_header.dart';
+import 'package:ezmanagement/src/presentation/ui/pages/main/profile/widgets/profile_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
 
