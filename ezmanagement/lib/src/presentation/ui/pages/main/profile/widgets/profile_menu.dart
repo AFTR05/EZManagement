@@ -1,7 +1,4 @@
-
-import 'package:easy_localization/easy_localization.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/dialogs/logout_confirmation_dialog.dart';
-import 'package:ezmanagement/translations/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -35,15 +32,15 @@ class ProfileMenuTile extends StatelessWidget {
     required this.iconColor,
   });
 
-Future<void> _showLogoutBottomSheet(BuildContext context) async {
-  final confirmed = await showModalBottomSheet<bool>(
-    context: context,
-    isDismissible: false,
-    isScrollControlled: false,
-    backgroundColor: Colors.transparent,
-    barrierColor: EZColorsApp.ezAppColor.withValues(alpha: 0.8),
-    builder: (_) => const LogoutConfirmationDialog(),
-  );
+  Future<void> _showLogoutBottomSheet(BuildContext context) async {
+    final confirmed = await showModalBottomSheet<bool>(
+      context: context,
+      isDismissible: false,
+      isScrollControlled: false,
+      backgroundColor: Colors.transparent,
+      barrierColor: EZColorsApp.ezAppColor.withValues(alpha: 0.8),
+      builder: (_) => const LogoutConfirmationDialog(),
+    );
 
     if (confirmed == true) {
       // Logica real
@@ -91,12 +88,11 @@ Future<void> _showLogoutBottomSheet(BuildContext context) async {
               size: 20,
             ),
       onTap: () {
-        if (item.isLogout) {  _showLogoutBottomSheet(context); 
+        if (item.isLogout) {
+          _showLogoutBottomSheet(context);
         } else if (item.route != null) {
           Navigator.pushNamed(context, item.route!);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(LocaleKeys.profileMenuLoggingOutSnack.tr())),
-          );}
+        }
       },
       contentPadding: const EdgeInsets.symmetric(horizontal: 20),
     );
@@ -112,33 +108,35 @@ class ProfileMenu extends StatelessWidget {
     required this.textColor,
     required this.iconColor,
   });
-List<ProfileMenuItem> get menuItems => const [
-        ProfileMenuItem(
-          label: 'Perfil',
-          iconAsset: 'assets/images/icons/user_icon.svg',
-          route: '/edit-profile',
-        ),
-        ProfileMenuItem(
-          label: 'Favoritos',
-          icon: PhosphorIconsBold.heart,
-          route: '/favorites',
-        ),
-        ProfileMenuItem(
-          label: 'Política de Privacidad',
-          iconAsset: 'assets/images/icons/password_icon.svg',
-          route: '/privacy-policy',
-        ),
-        ProfileMenuItem(
-          label: 'Configuración',
-          icon: PhosphorIconsBold.gear,
-          route: '/config',
-        ),
-        ProfileMenuItem(
-          label: 'Cerrar Sesión',
-          icon: PhosphorIconsBold.signOut,
-          isLogout: true,
-        ),
-      ];
+
+  List<ProfileMenuItem> get menuItems => const [
+    ProfileMenuItem(
+      label: 'Perfil',
+      iconAsset: 'assets/images/icons/user_icon.svg',
+      route: '/edit-profile',
+    ),
+    ProfileMenuItem(
+      label: 'Favoritos',
+      icon: PhosphorIconsBold.heart,
+      route: '/favorites',
+    ),
+    ProfileMenuItem(
+      label: 'Política de Privacidad',
+      iconAsset: 'assets/images/icons/password_icon.svg',
+      route: '/privacy-policy',
+    ),
+    ProfileMenuItem(
+      label: 'Configuración',
+      icon: PhosphorIconsBold.gear,
+      route: '/config',
+    ),
+    ProfileMenuItem(
+      label: 'Cerrar Sesión',
+      icon: PhosphorIconsBold.signOut,
+      isLogout: true,
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return ListView.separated(

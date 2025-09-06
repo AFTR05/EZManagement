@@ -6,7 +6,6 @@ import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/prof
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/profile_settings_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/no_route_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class RoutesApp {
   static const String index = "/";
