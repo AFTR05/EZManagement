@@ -1,3 +1,4 @@
+import 'package:ezmanagement/src/presentation/ui/pages/custom_widgets/app_bar/custom_app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -82,36 +83,11 @@ class _PasswordManagerScreenState extends State<PasswordManagerScreen> {
       );
     }
 
+    
+
     return Scaffold(
       backgroundColor: bgColor,
-      appBar: AppBar(
-        backgroundColor: bgColor,
-        elevation: 0,
-        centerTitle: false,
-        automaticallyImplyLeading: false,
-        titleSpacing: 0,
-        leading: IconButton(
-          icon: SvgPicture.asset(
-            'assets/images/icons/return_icon.svg',
-            width: 28,
-            height: 28,
-
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Padding(
-          padding: const EdgeInsets.only(left: 2),
-          child: Text(
-            "Administrador De Contraseñas",
-            style: TextStyle(
-              fontFamily: 'OpenSansHebrew',
-              color: mainBlue,
-              fontWeight: FontWeight.bold,
-              fontSize: 21,
-            ),
-          ),
-        ),
-      ),
+      appBar: CustomAppBarWidget(title: "Administrador de contraseñas"),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
         child: ListView(
