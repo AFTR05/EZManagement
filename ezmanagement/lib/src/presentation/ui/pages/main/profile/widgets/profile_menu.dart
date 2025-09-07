@@ -129,7 +129,12 @@ class ProfileMenu extends StatelessWidget {
       label: 'Configuración',
       icon: PhosphorIconsBold.gear,
       route: '/config',
-    )
+    ),
+    ProfileMenuItem(
+      label: 'Cerrar Sesión',
+      icon: PhosphorIconsBold.signOut,
+      isLogout: true,
+    ),
   ];
 
   @override

@@ -7,7 +7,7 @@ part of 'riverpod_presentation.dart';
 // **************************************************************************
 
 String _$authenticationControllerHash() =>
-    r'fd513f428f1332809bca606f2847f2c83615a30d';
+    r'6eeb6b4dfed75bdf1de846b0a899a70ae163ab9c';
 
 /// See also [authenticationController].
 @ProviderFor(authenticationController)

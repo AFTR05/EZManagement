@@ -9,16 +9,23 @@ import 'package:ezmanagement/src/domain/enum/auth_provider_enum.dart';
 import 'package:ezmanagement/src/domain/repositories/authentication_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb;
+import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FirebaseAuthenticationRepositoryImpl implements AuthenticationRepository {
   final FirebaseAuth _auth;
   final String accountsCollectionPath;
 
+  static const _kRememberKey = 'remember_me';
+  static const _kLastUid = 'remember_uid';
+  static const _kLastEmail = 'remember_email';
+
   FirebaseAuthenticationRepositoryImpl({
     required FirebaseAuth firebaseAuth,
     required FirebaseFirestore firestore,
     this.accountsCollectionPath = 'accounts',
-  })  : _auth = firebaseAuth;
+  }) : _auth = firebaseAuth;
   bool _isBlank(String? s) => s == null || s.trim().isEmpty;
 
   Future<String?> _tryGetIdToken(User user) async {
@@ -35,23 +42,70 @@ class FirebaseAuthenticationRepositoryImpl implements AuthenticationRepository {
     try {
       final p = jwt!.split('.')[1];
       final norm = base64Url.normalize(p);
-      final payload = json.decode(utf8.decode(base64Url.decode(norm)))
-          as Map<String, dynamic>;
+      final payload =
+          json.decode(utf8.decode(base64Url.decode(norm)))
+              as Map<String, dynamic>;
       final expMs = (payload['exp'] as int) * 1000;
-      return DateTime.fromMillisecondsSinceEpoch(expMs)
-          .subtract(const Duration(minutes: 1));
+      return DateTime.fromMillisecondsSinceEpoch(
+        expMs,
+      ).subtract(const Duration(minutes: 1));
     } catch (_) {
       return null;
     }
   }
 
   @override
+  Future<AccountEntity?> restoredSessionOnce(
+      {Duration timeout = const Duration(seconds: 2)}) async {
+    try {
+      fb.User? user = _auth.currentUser;
+
+      if (user == null) {
+        try {
+          user = await _auth
+              .authStateChanges()
+              .firstWhere((u) => u != null)
+              .timeout(timeout, onTimeout: () => null);
+        } catch (_) {
+          user = null;
+        }
+      }
+
+      if (user == null) return null;
+
+      try {
+        await user.reload();
+      } catch (_) {}
+
+      final token = await _tryGetIdToken(user);
+      final exp = _decodeExpOrNull(token);
+
+      return AccountEntity(
+        uid: user.uid,
+        idToken: token,
+        expiresAt: exp,
+        providers: _mapProviders(user),
+        isAuthenticated: true,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
+
+  @override
   Future<Either<Failure, AccountEntity>> logIn({
     required String email,
     required String password,
     bool requireEmailVerified = false,
+    bool rememberMe = true,
   }) async {
     try {
+      if (kIsWeb) {
+        await _auth.setPersistence(
+          rememberMe ? fb.Persistence.LOCAL : fb.Persistence.SESSION,
+        );
+      }
       final cred = await _auth.signInWithEmailAndPassword(
         email: email.trim(),
         password: password,
@@ -65,14 +119,21 @@ class FirebaseAuthenticationRepositoryImpl implements AuthenticationRepository {
 
       final token = await _tryGetIdToken(user); // String?
       final exp = _decodeExpOrNull(token); // DateTime?
-
-      return Right(AccountEntity(
-        uid: user.uid,
-        idToken: token,
-        expiresAt: exp,
-        providers: _mapProviders(user),
-        isAuthenticated: true,
-      ));
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_kRememberKey, rememberMe);
+      await prefs.setString(_kLastUid, user.uid);
+      if (user.email != null && user.email!.trim().isNotEmpty) {
+        await prefs.setString(_kLastEmail, user.email!.trim());
+      }
+      return Right(
+        AccountEntity(
+          uid: user.uid,
+          idToken: token,
+          expiresAt: exp,
+          providers: _mapProviders(user),
+          isAuthenticated: true,
+        ),
+      );
     } on FirebaseAuthException catch (e) {
       return Left(_mapFirebaseAuthException(e));
     } catch (_) {
@@ -113,13 +174,15 @@ class FirebaseAuthenticationRepositoryImpl implements AuthenticationRepository {
       final token = await _tryGetIdToken(user);
       final exp = _decodeExpOrNull(token);
 
-      return Right(AccountEntity(
-        uid: user.uid,
-        idToken: token,
-        expiresAt: exp,
-        providers: _mapProviders(user),
-        isAuthenticated: true,
-      ));
+      return Right(
+        AccountEntity(
+          uid: user.uid,
+          idToken: token,
+          expiresAt: exp,
+          providers: _mapProviders(user),
+          isAuthenticated: true,
+        ),
+      );
     } on FirebaseAuthException catch (e) {
       try {
         await _auth.signOut();
@@ -159,13 +222,15 @@ class FirebaseAuthenticationRepositoryImpl implements AuthenticationRepository {
       final token = await _tryGetIdToken(user);
       final exp = _decodeExpOrNull(token);
 
-      return Right(AccountEntity(
-        uid: user.uid,
-        idToken: token,
-        expiresAt: exp,
-        providers: _mapProviders(user),
-        isAuthenticated: true,
-      ));
+      return Right(
+        AccountEntity(
+          uid: user.uid,
+          idToken: token,
+          expiresAt: exp,
+          providers: _mapProviders(user),
+          isAuthenticated: true,
+        ),
+      );
     } on FirebaseAuthException catch (e) {
       return Left(_mapFirebaseAuthException(e));
     } catch (_) {
@@ -182,7 +247,8 @@ class FirebaseAuthenticationRepositoryImpl implements AuthenticationRepository {
       return Left(_mapFirebaseAuthException(e));
     } catch (_) {
       return Left(
-          _authFailure('No fue posible enviar el correo de recuperación.'));
+        _authFailure('No fue posible enviar el correo de recuperación.'),
+      );
     }
   }
 
@@ -199,7 +265,8 @@ class FirebaseAuthenticationRepositoryImpl implements AuthenticationRepository {
       return Left(_mapFirebaseAuthException(e));
     } catch (_) {
       return Left(
-          _authFailure('No fue posible reenviar el correo de verificación.'));
+        _authFailure('No fue posible reenviar el correo de verificación.'),
+      );
     }
   }
 
@@ -217,10 +284,7 @@ class FirebaseAuthenticationRepositoryImpl implements AuthenticationRepository {
 
   @override
   Either<Failure, Map<String, String>> processError(Failure error) {
-    return Right({
-      'title': 'Error de autenticación',
-      'message': error.message,
-    });
+    return Right({'title': 'Error de autenticación', 'message': error.message});
   }
 
   Set<AuthProviderEnum> _mapProviders(User user) {
@@ -262,4 +326,60 @@ class FirebaseAuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   AuthException _authFailure(String msg) => (AuthException()..message = msg);
+
+  @override
+  Future<void> setLastLoginUid(String uid) async {
+    final p = await SharedPreferences.getInstance();
+    await p.setString(_kLastUid, uid);
+  }
+
+  @override
+  Future<String?> getLastLoginUid() async {
+    final p = await SharedPreferences.getInstance();
+    final v = p.getString(_kLastUid);
+    return (v == null || v.trim().isEmpty) ? null : v;
+  }
+
+  @override
+  Future<void> clearLastLoginUid() async {
+    final p = await SharedPreferences.getInstance();
+    await p.remove(_kLastUid);
+  }
+
+  @override
+  Future<void> setLastLoginEmail(String email) async {
+    final p = await SharedPreferences.getInstance();
+    await p.setString(_kLastEmail, email.trim());
+  }
+
+  @override
+  Future<String?> getLastLoginEmail() async {
+    final p = await SharedPreferences.getInstance();
+    final v = p.getString(_kLastEmail);
+    return (v == null || v.trim().isEmpty) ? null : v;
+  }
+
+  @override
+  Future<void> clearLastLoginEmail() async {
+    final p = await SharedPreferences.getInstance();
+    await p.remove(_kLastEmail);
+  }
+
+  @override
+  Future<void> setRememberMe(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_kRememberKey, value);
+  }
+
+  @override
+  Future<bool> getRememberMe() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_kRememberKey) ?? false;
+  }
+
+  @override
+  Future<void> clearRememberMe() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_kRememberKey);
+  }
 }

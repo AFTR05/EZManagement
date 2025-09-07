@@ -50,7 +50,7 @@ class _EZManagementAppState extends ConsumerState<EZManagementApp> {
               darkTheme: AppTheme.darkTheme,
               themeMode: themeMode,
               navigatorObservers: [NavigationService.myTransitionObserver],
-              initialRoute: RoutesApp.login,
+              initialRoute: RoutesApp.index,
               onGenerateRoute: RoutesApp.generateRoute,
             ),
           ),

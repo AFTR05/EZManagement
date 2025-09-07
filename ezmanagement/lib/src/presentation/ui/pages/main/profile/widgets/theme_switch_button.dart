@@ -8,22 +8,19 @@ class ThemeSwitchButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeAppProvider);
-    final isDarkmode = Theme.of(context).brightness == Brightness.dark;
-    final mainBlue = EZColorsApp.ezAppColor;
-    final isCurrentlyDark = themeMode == ThemeMode.dark;
+    
+    final isDarkmode = ref
+                    .read(themeAppProvider.notifier)
+                    .isDarkMode(context);
 
     final cardColor = isDarkmode ? EZColorsApp.darkGray : Colors.white;
     final shadowColor = isDarkmode
         ? Colors.black.withValues(alpha: 0.3)
         : Colors.black.withValues(alpha: 0.09);
     final textColor = isDarkmode ? Colors.white : Colors.black87;
-    final inactiveTrackColor = isDarkmode
-        ? EZColorsApp.grayColor.withValues(alpha: 0.69)
-        : EZColorsApp.grayColor.withValues(alpha: 0.35);
 
     // Icono dinámico basado en el tema actual
-    final themeIcon = isCurrentlyDark ? Icons.dark_mode : Icons.light_mode;
+    final themeIcon = isDarkmode ? Icons.dark_mode : Icons.light_mode;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -52,7 +49,7 @@ class ThemeSwitchButton extends ConsumerWidget {
             tileColor: cardColor,
             leading: Icon(themeIcon, color: EZColorsApp.ezAppColor, size: 22),
             title: Text(
-              isCurrentlyDark ? "Tema Oscuro" : "Tema Claro",
+              isDarkmode ? "Tema Oscuro" : "Tema Claro",
               style: TextStyle(
                 fontFamily: 'OpenSansHebrew',
                 fontWeight: FontWeight.w400,
@@ -61,13 +58,13 @@ class ThemeSwitchButton extends ConsumerWidget {
               ),
             ),
             trailing: Switch(
-              value: isCurrentlyDark,
+              value: isDarkmode,
               activeColor: Colors.white,
               activeTrackColor: EZColorsApp.ezAppColor,
               inactiveThumbColor: Colors.white,
               inactiveTrackColor: EZColorsApp.lightGray,
               trackOutlineColor: WidgetStateProperty.all(
-                isCurrentlyDark
+                isDarkmode
                     ? EZColorsApp.ezAppColor
                     : EZColorsApp.lightGray,
               ),
