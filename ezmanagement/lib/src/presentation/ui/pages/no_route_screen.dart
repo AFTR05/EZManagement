@@ -10,12 +10,8 @@ class NoRouteScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Página no encontrada"),
         centerTitle: true,
-        iconTheme: IconThemeData(
-          color: Colors.white
-        ),
-        actionsIconTheme: IconThemeData(
-          color: Colors.white
-        ),
+        iconTheme: IconThemeData(color: Colors.white),
+        actionsIconTheme: IconThemeData(color: Colors.white),
       ),
       body: Center(
         child: Padding(
@@ -49,7 +45,7 @@ class NoRouteScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
-              
+
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -57,10 +53,23 @@ class NoRouteScreen extends StatelessWidget {
                 icon: Icon(Icons.arrow_back, color: EZColorsApp.ezAppColor),
                 label: Text(
                   "Volver",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: "OpenSansHebrew",
-                    color: EZColorsApp.ezAppColor,
+                  ).copyWith(color: EZColorsApp.ezAppColor),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: EZColorsApp.ezAppColor,
+                  shadowColor: EZColorsApp.ezAppColor.withValues(alpha: .2),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: BorderSide(color: EZColorsApp.ezAppColor, width: 1.2),
                   ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
+                  elevation: 2,
                 ),
               ),
             ],

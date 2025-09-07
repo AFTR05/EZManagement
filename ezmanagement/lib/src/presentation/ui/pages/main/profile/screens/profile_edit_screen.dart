@@ -1,7 +1,7 @@
 import 'dart:io';
+import 'package:ezmanagement/src/presentation/ui/pages/custom_widgets/app_bar/custom_app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
@@ -67,25 +67,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
 
     return Scaffold(
       backgroundColor: isDarkmode ? EZColorsApp.darkBackgroud : Colors.white,
-      appBar: AppBar(
-        backgroundColor: isDarkmode ? EZColorsApp.darkBackgroud : Colors.white,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        leading: IconButton(
-          icon: SvgPicture.asset('assets/images/icons/return_icon.svg', width: 28, height: 28),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          LocaleKeys.profileLabel.tr(),
-          style: TextStyle(
-            fontFamily: 'OpenSansHebrew',
-            color: EZColorsApp.ezAppColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-          ),
-        ),
-      ),
+      appBar: CustomAppBarWidget(title: LocaleKeys.profileLabel.tr()),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 8),
         child: Form(

@@ -11,11 +11,13 @@ class AppTheme {
     appBarTheme: AppBarTheme(
       color: EZColorsApp.ezAppColor,
       iconTheme: const IconThemeData(color: EZColorsApp.grayColor),
+      scrolledUnderElevation: 0,
+      surfaceTintColor: Colors.transparent,
       titleTextStyle: const TextStyle(color: Colors.white, fontSize: 18),
     ),
-    canvasColor: Colors.transparent,dialogTheme: DialogThemeData(backgroundColor: Colors.white)
+    canvasColor: Colors.transparent,
+    dialogTheme: DialogThemeData(backgroundColor: Colors.white),
   );
-  
 
   static final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
@@ -25,10 +27,13 @@ class AppTheme {
     scaffoldBackgroundColor: EZColorsApp.darkBackgroud,
     appBarTheme: AppBarTheme(
       color: Colors.grey[850],
+      scrolledUnderElevation: 0,
+      surfaceTintColor: Colors.transparent,
       iconTheme: const IconThemeData(color: Colors.white),
       titleTextStyle: const TextStyle(color: Colors.white, fontSize: 18),
     ),
     cardColor: EZColorsApp.darkBackgroud,
-    canvasColor: Colors.transparent, dialogTheme: DialogThemeData(backgroundColor: EZColorsApp.darkBackgroud)
+    canvasColor: Colors.transparent,
+    dialogTheme: DialogThemeData(backgroundColor: EZColorsApp.darkBackgroud),
   );
 }

@@ -1,7 +1,8 @@
 import 'package:ezmanagement/src/presentation/ui/pages/auth/login_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/first_boot_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/main_screen.dart';
-import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/password_manager_screen.dart';
+import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/configuration/password_manager_screen.dart';
+import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/configuration/role_management/role_management_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/profile_edit_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/profile_settings_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/no_route_screen.dart';
@@ -15,6 +16,8 @@ class RoutesApp {
   static const String editProfile = "/edit-profile";
   static const String config = "/config";
   static const String passwordManager = "/password-manager";
+  static const String configRoles = "/config/roles";
+  static const String configUsers = "/config/users";
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -28,8 +31,12 @@ class RoutesApp {
         return MaterialPageRoute(builder: (_) => const ProfileEditScreen());
       case config:
         return MaterialPageRoute(builder: (_) => const ProfileSettingsScreen());
-      case passwordManager: // caso para administrador de contraseñas
+      case passwordManager:
         return MaterialPageRoute(builder: (_) => const PasswordManagerScreen());
+      case configRoles:
+        return MaterialPageRoute(builder: (_) => const RoleManagementScreen());
+      case configUsers:
+        return MaterialPageRoute(builder: (_) => const RoleManagementScreen());
       default:
         return MaterialPageRoute(builder: (_) => const NoRouteScreen());
     }

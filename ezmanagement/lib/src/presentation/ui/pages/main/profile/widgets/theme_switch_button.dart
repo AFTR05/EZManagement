@@ -9,9 +9,7 @@ class ThemeSwitchButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     
-    final isDarkmode = ref
-                    .read(themeAppProvider.notifier)
-                    .isDarkMode(context);
+    final isDarkmode = Theme.of(context).brightness == Brightness.dark;
 
     final cardColor = isDarkmode ? EZColorsApp.darkGray : Colors.white;
     final shadowColor = isDarkmode
