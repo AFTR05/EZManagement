@@ -55,7 +55,7 @@ Future<void> _showDeleteDialog(BuildContext context) async {
     final isDarkmode = Theme.of(context).brightness == Brightness.dark;
     final mainBlue = EZColorsApp.ezAppColor;
     final bgColor = isDarkmode ? EZColorsApp.darkBackgroud : Colors.white;
-    final shadowColor = isDarkmode ? Colors.black.withValues(alpha: 0.3) : Colors.black.withOpacity(0.09);
+    final shadowColor = isDarkmode ? Colors.black.withValues(alpha: 0.3) : Colors.black.withValues(alpha: .09);
     final cardColor = isDarkmode ? EZColorsApp.darkGray : Colors.white;
 
 Widget buildSettingsButton({
@@ -66,34 +66,48 @@ Widget buildSettingsButton({
 }) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 5),
-    child: Material(
-      elevation: 2,
-      shadowColor: shadowColor,
-      borderRadius: BorderRadius.circular(10),
-      color: cardColor,
-      child: ListTile(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        tileColor: cardColor,
-        leading: SvgPicture.asset(
-          iconAsset,
-          width: 21,
-          height: 21, 
+    child: Container(
+      decoration: BoxDecoration(
+          color: cardColor,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: shadowColor,
+              blurRadius: 15,
+              offset: const Offset(1, 1),
+              spreadRadius: 1,
+            ),
+          ],
         ),
-        title: Text(
-          label,
-          style: TextStyle(
-            fontFamily: 'OpenSansHebrew',
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
+      child: Material(
+        elevation: 2,
+        shadowColor: shadowColor,
+        borderRadius: BorderRadius.circular(10),
+        color: cardColor,
+        child: ListTile(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          tileColor: cardColor,
+          leading: SvgPicture.asset(
+            iconAsset,
+            width: 21,
+            height: 21, 
           ),
+          title: Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'OpenSansHebrew',
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          trailing: Icon(
+            PhosphorIconsBold.caretRight,
+            color: mainBlue.withValues(alpha: 0.6),
+            size: 20,
+          ),
+          onTap: onTap,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20),
         ),
-        trailing: Icon(
-          PhosphorIconsBold.caretRight,
-          color: mainBlue.withValues(alpha: 0.6),
-          size: 20,
-        ),
-        onTap: onTap,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20),
       ),
     ),
   );
@@ -144,6 +158,18 @@ Widget buildSettingsButton({
                   isDestructive: true,
                 ),
                 ThemeSwitchButton(),
+                buildSettingsButton(
+                  label: "Gestionar Roles",
+                  iconAsset: 'assets/images/icons/role_icon.svg',
+                  onTap: () => Navigator.pushNamed(context, '/roles'),
+                  isDestructive: true,
+                ),
+                buildSettingsButton(
+                  label: "Gestionar Usuarios",
+                  iconAsset: 'assets/images/icons/users_icon.svg',
+                  onTap: () => Navigator.pushNamed(context, '/users'),
+                  isDestructive: true,
+                ),
               ],
             ),
           ),

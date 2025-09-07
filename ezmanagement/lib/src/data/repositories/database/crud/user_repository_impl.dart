@@ -94,10 +94,10 @@ class UserRepositoryImpl extends UserRepository {
     required UserEntity t,
   }) async {
     try {
-      final docRef = t.id.isEmpty ? _collection.doc() : _collection.doc(t.id);
+      final docRef = t.uid.isEmpty ? _collection.doc() : _collection.doc(t.uid);
 
       final newEntity =
-          t.id.isEmpty ? UserEntity.fromMap(t.toMap(), docRef.id) : t;
+          t.uid.isEmpty ? UserEntity.fromMap(t.toMap(), docRef.id) : t;
 
       await docRef.set(newEntity.toMap(), SetOptions(merge: false));
       return Right(newEntity);
@@ -116,9 +116,9 @@ class UserRepositoryImpl extends UserRepository {
       final created = <UserEntity>[];
 
       for (final u in ts) {
-        final docRef = u.id.isEmpty ? _collection.doc() : _collection.doc(u.id);
+        final docRef = u.uid.isEmpty ? _collection.doc() : _collection.doc(u.uid);
         final newEntity =
-            u.id.isEmpty ? UserEntity.fromMap(u.toMap(), docRef.id) : u;
+            u.uid.isEmpty ? UserEntity.fromMap(u.toMap(), docRef.id) : u;
 
         batch.set(docRef, newEntity.toMap(), SetOptions(merge: false));
         created.add(newEntity);
@@ -136,7 +136,7 @@ class UserRepositoryImpl extends UserRepository {
     required UserEntity t,
   }) async {
     try {
-      await _collection.doc(t.id).update(t.toMap());
+      await _collection.doc(t.uid).update(t.toMap());
       return Right(t);
     } catch (_) {
       return Left(UserException());
@@ -151,7 +151,7 @@ class UserRepositoryImpl extends UserRepository {
     try {
       final batch = _firestore.batch();
       for (final u in ts) {
-        batch.update(_collection.doc(u.id), u.toMap());
+        batch.update(_collection.doc(u.uid), u.toMap());
       }
       await batch.commit();
       return Right(ts);
@@ -165,7 +165,7 @@ class UserRepositoryImpl extends UserRepository {
     required UserEntity t,
   }) async {
     try {
-      await _collection.doc(t.id).delete();
+      await _collection.doc(t.uid).delete();
       return Right(t);
     } catch (_) {
       return Left(UserException());
@@ -180,7 +180,7 @@ class UserRepositoryImpl extends UserRepository {
     try {
       final batch = _firestore.batch();
       for (final u in ts) {
-        batch.delete(_collection.doc(u.id));
+        batch.delete(_collection.doc(u.uid));
       }
       await batch.commit();
       return Right(ts);

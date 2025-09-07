@@ -8,6 +8,8 @@ import 'package:ezmanagement/src/presentation/ui/pages/custom_widgets/background
 import 'package:ezmanagement/src/presentation/ui/pages/custom_widgets/buttons/custom_login_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:ezmanagement/translations/locale_keys.g.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -24,6 +26,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   final _formKey = GlobalKey<FormState>();
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+  bool _rememberMe = false;
 
   @override
   void initState() {
@@ -140,7 +143,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Text(
-        'Inicio de sesión',
+        LocaleKeys.loginTitle.tr(),
         style: TextStyle(
           fontSize: isSmallScreen ? 24 : 28,
           fontWeight: FontWeight.w700,
@@ -166,65 +169,134 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       child: Container(
         width: isSmallScreen ? double.infinity : formWidth,
         padding: isSmallScreen ? const EdgeInsets.only(left: 0) : null,
-        child: Stack(
+        child: Column(
           children: [
-            Container(
-              margin: EdgeInsets.only(right: isSmallScreen ? 25 : 30),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
+            Stack(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(right: isSmallScreen ? 25 : 30),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Form(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: isSmallScreen
+                          ? CrossAxisAlignment.start
+                          : CrossAxisAlignment.center,
+                      children: [
+                        CustomAuthTextFieldWidget(
+                          controller: _emailController,
+                          validator: FieldsValidators.fieldIsRequired,
+                          hintText: LocaleKeys.loginUserHint.tr(),
+                          boxBorder: Border(
+                            top: BorderSide(color: borderColor, width: 0.5),
+                            right: BorderSide(color: borderColor, width: 0.5),
+                            bottom: BorderSide(color: borderColor, width: 0.25),
+                            left: BorderSide(color: borderColor, width: 0.5),
+                          ),
+                          isTop: true,
+                          prefix: Icon(
+                            Icons.person_outline,
+                            size: isSmallScreen ? 18 : 20,
+                          ),
+                        ),
+                        CustomAuthTextFieldWidget(
+                          controller: _passwordController,
+                          validator: FieldsValidators.fieldIsRequired,
+                          hintText: LocaleKeys.loginPasswordHint.tr(),
+                          boxBorder: Border(
+                            top: BorderSide(color: borderColor, width: 0.25),
+                            right: BorderSide(color: borderColor, width: 0.5),
+                            bottom: BorderSide(color: borderColor, width: 0.5),
+                            left: BorderSide(color: borderColor, width: 0.5),
+                          ),
+                          isBottom: true,
+                          isPasswordField: true,
+                          suffix: SizedBox(width: isSmallScreen ? 35 : 40),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 0,
+                  top: _getButtonTopPosition(isSmallScreen),
+                  child: CustomLoginButtonWidget(
+                    isSmallScreen: isSmallScreen,
+                    onTap: _loginValidation,
+                  ),
+                ),
+              ],
+            ),
+            
+            // Remember Me Widget
+            SizedBox(height: height * 0.025),
+            _buildRememberMe(isSmallScreen),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRememberMe(bool isSmallScreen) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDarkMode ? Colors.white : Colors.black87;
+    
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.only(
+        left: isSmallScreen ? 0 : 0,
+        right: isSmallScreen ? 25 : 30,
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 20,
+            height: 20,
+            child: Checkbox(
+              value: _rememberMe,
+              onChanged: (bool? value) {
+                setState(() {
+                  _rememberMe = value ?? false;
+                });
+              },
+              activeColor: EZColorsApp.ezAppColor,
+              checkColor: Colors.white,
+              side: BorderSide(
+                color: isDarkMode 
+                    ? Colors.white.withValues(alpha: 0.6)
+                    : Colors.grey.shade400,
+                width: 1.5,
               ),
-              child: Form(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: isSmallScreen
-                      ? CrossAxisAlignment.start
-                      : CrossAxisAlignment.center,
-                  children: [
-                    CustomAuthTextFieldWidget(
-                      controller: _emailController,
-                      validator: FieldsValidators.fieldIsRequired,
-                      hintText: 'Usuario',
-                      boxBorder: Border(
-                        top: BorderSide(color: borderColor, width: 0.5),
-                        right: BorderSide(color: borderColor, width: 0.5),
-                        bottom: BorderSide(color: borderColor, width: 0.25),
-                        left: BorderSide(color: borderColor, width: 0.5),
-                      ),
-                      isTop: true,
-                      prefix: Icon(
-                        Icons.person_outline,
-                        size: isSmallScreen ? 18 : 20,
-                      ),
-                    ),
-                    CustomAuthTextFieldWidget(
-                      controller: _passwordController,
-                      validator: FieldsValidators.fieldIsRequired,
-                      hintText: 'Contraseña',
-                      boxBorder: Border(
-                        top: BorderSide(color: borderColor, width: 0.25),
-                        right: BorderSide(color: borderColor, width: 0.5),
-                        bottom: BorderSide(color: borderColor, width: 0.5),
-                        left: BorderSide(color: borderColor, width: 0.5),
-                      ),
-                      isBottom: true,
-                      isPasswordField: true,
-                      suffix: SizedBox(width: isSmallScreen ? 35 : 40),
-                    ),
-                  ],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              visualDensity: VisualDensity.compact,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _rememberMe = !_rememberMe;
+                });
+              },
+              child: Text(
+                "Remember me", // Puedes usar LocaleKeys.rememberMe.tr() si tienes la traducción
+                style: TextStyle(
+                  fontSize: isSmallScreen ? 13 : 14,
+                  fontWeight: FontWeight.w400,
+                  color: textColor.withValues(alpha: 0.8),
+                  letterSpacing: 0.2,
                 ),
               ),
             ),
-            Positioned(
-              right: 0,
-              top: _getButtonTopPosition(isSmallScreen),
-              child: CustomLoginButtonWidget(
-                isSmallScreen: isSmallScreen,
-                onTap: _loginValidation,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -250,9 +322,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     await ref
         .read(authenticationControllerProvider)
         .loginAction(
-          email: _emailController.text.trim(), // <-- usar email
+          email: _emailController.text.trim(),
           password: _passwordController.text,
           context: context,
+          //rememberMe: _rememberMe, // Pasar el estado de remember me
         );
   }
 }

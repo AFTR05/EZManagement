@@ -2,30 +2,36 @@ import 'package:ezmanagement/src/domain/entities/entity_mixin.dart';
 import 'package:ezmanagement/src/domain/enum/state_enum.dart';
 
 class UserEntity with EntityMixin {
-  final String id;
-  final String name;
-  final String email;
-  final String roleId;
-  final String roleName;
-  final StateEnum state;
+  final String uid;
+  final String? name;
+  final String? email;
+  final String? roleId;
+  final String? roleName;
+  final StateEnum? status;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final DateTime? lastLoginAt;
 
   UserEntity({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.roleId,
-    required this.roleName,
-    required this.state,
+    required this.uid,
+    this.name,
+    this.email,
+    this.roleId,
+    this.roleName,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+    this.lastLoginAt,
   });
 
   factory UserEntity.fromMap(Map<String, dynamic> map, String id) {
     return UserEntity(
-      id: id,
+      uid: id,
       name: map['name'] ?? '',
       email: map['email'] ?? '',
       roleId: map['roleId'] ?? '',
       roleName: map['roleName'] ?? '',
-      state: StateEnum.values.firstWhere(
+      status: StateEnum.values.firstWhere(
         (e) => e.toString().split('.').last == map['state'],
         orElse: () =>
             StateEnum.active,
@@ -39,12 +45,12 @@ class UserEntity with EntityMixin {
       'email': email,
       'roleName': roleName,
       'roleId': roleId,
-      'state': state.toString().split('.').last,
+      'state': status.toString().split('.').last,
     };
   }
 
   @override
   String toString() {
-    return 'UserEntity(id: $id, name: $name, email: $email)';
+    return 'UserEntity(id: $uid, name: $name, email: $email)';
   }
 }

@@ -8,10 +8,12 @@ class LogInParams {
   final String email;
   final String password;
   final bool requireEmailVerified;
+  final bool rememberMe;
   const LogInParams({
     required this.email,
     required this.password,
     this.requireEmailVerified = true,
+    this.rememberMe = false,
   });
 }
 
@@ -37,7 +39,13 @@ class AuthenticationUsecase {
       email: params.email,
       password: params.password,
       requireEmailVerified: params.requireEmailVerified,
+      rememberMe: params.rememberMe,
     );
+  }
+
+  Future<AccountEntity?> restoredSessionOnce(
+      {Duration timeout = const Duration(seconds: 2)}) {
+    return authRepository.restoredSessionOnce(timeout: timeout);
   }
 
   Future<Either<Failure, AccountEntity>> signUp(RegisterParams params) {
@@ -72,4 +80,17 @@ class AuthenticationUsecase {
   Either<Failure, Map<String, String>> processError(Failure error) {
     return authRepository.processError(error);
   }
+
+  Future<void> setRememberMe(bool v) => authRepository.setRememberMe(v);
+  Future<bool> getRememberMe() => authRepository.getRememberMe();
+  Future<void> clearRememberMe() => authRepository.clearRememberMe();
+  Future<void> setLastLoginUid(String uid) =>
+      authRepository.setLastLoginUid(uid);
+  Future<String?> getLastLoginUid() => authRepository.getLastLoginUid();
+  Future<void> clearLastLoginUid() => authRepository.clearLastLoginUid();
+
+  Future<void> setLastLoginEmail(String email) =>
+      authRepository.setLastLoginEmail(email);
+  Future<String?> getLastLoginEmail() => authRepository.getLastLoginEmail();
+  Future<void> clearLastLoginEmail() => authRepository.clearLastLoginEmail();
 }

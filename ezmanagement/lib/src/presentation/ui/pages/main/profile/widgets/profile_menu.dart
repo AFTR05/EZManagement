@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
 
-
 class ProfileMenuItem {
   final String label;
   final IconData? icon;
@@ -21,7 +20,6 @@ class ProfileMenuItem {
   });
 }
 
-
 class ProfileMenuTile extends StatelessWidget {
   final ProfileMenuItem item;
   final Color textColor;
@@ -34,15 +32,15 @@ class ProfileMenuTile extends StatelessWidget {
     required this.iconColor,
   });
 
-Future<void> _showLogoutBottomSheet(BuildContext context) async {
-  final confirmed = await showModalBottomSheet<bool>(
-    context: context,
-    isDismissible: false,
-    isScrollControlled: false,
-    backgroundColor: Colors.transparent,
-    barrierColor: EZColorsApp.ezAppColor.withValues(alpha: 0.8),
-    builder: (_) => const LogoutConfirmationDialog(),
-  );
+  Future<void> _showLogoutBottomSheet(BuildContext context) async {
+    final confirmed = await showModalBottomSheet<bool>(
+      context: context,
+      isDismissible: false,
+      isScrollControlled: false,
+      backgroundColor: Colors.transparent,
+      barrierColor: EZColorsApp.ezAppColor.withValues(alpha: 0.8),
+      builder: (_) => const LogoutConfirmationDialog(),
+    );
 
     if (confirmed == true) {
       // Logica real
@@ -53,26 +51,24 @@ Future<void> _showLogoutBottomSheet(BuildContext context) async {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       leading: CircleAvatar(
         radius: 20,
         backgroundColor: iconColor.withValues(alpha: 0.15),
         child: item.iconAsset != null
             ? (item.iconAsset!.endsWith('.svg')
-                ? SvgPicture.asset(
-                    item.iconAsset!,
-                    width: 22,
-                    height: 22,
-                    colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-                  )
-                : Image.asset(
-                    item.iconAsset!,
-                    width: 22,
-                    height: 22,
-                    color: iconColor,
-                  ))
+                  ? SvgPicture.asset(
+                      item.iconAsset!,
+                      width: 22,
+                      height: 22,
+                      colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                    )
+                  : Image.asset(
+                      item.iconAsset!,
+                      width: 22,
+                      height: 22,
+                      color: iconColor,
+                    ))
             : Icon(item.icon, color: iconColor, size: 22),
       ),
       title: Text(
@@ -93,7 +89,7 @@ Future<void> _showLogoutBottomSheet(BuildContext context) async {
             ),
       onTap: () {
         if (item.isLogout) {
-          _showLogoutBottomSheet(context); 
+          _showLogoutBottomSheet(context);
         } else if (item.route != null) {
           Navigator.pushNamed(context, item.route!);
         }
@@ -102,7 +98,6 @@ Future<void> _showLogoutBottomSheet(BuildContext context) async {
     );
   }
 }
-
 
 class ProfileMenu extends StatelessWidget {
   final Color textColor;
@@ -115,32 +110,32 @@ class ProfileMenu extends StatelessWidget {
   });
 
   List<ProfileMenuItem> get menuItems => const [
-        ProfileMenuItem(
-          label: 'Perfil',
-          iconAsset: 'assets/images/icons/user_icon.svg',
-          route: '/edit-profile',
-        ),
-        ProfileMenuItem(
-          label: 'Favoritos',
-          icon: PhosphorIconsBold.heart,
-          route: '/favorites',
-        ),
-        ProfileMenuItem(
-          label: 'Política de Privacidad',
-          iconAsset: 'assets/images/icons/password_icon.svg',
-          route: '/privacy-policy',
-        ),
-        ProfileMenuItem(
-          label: 'Configuración',
-          icon: PhosphorIconsBold.gear,
-          route: '/config',
-        ),
-        ProfileMenuItem(
-          label: 'Cerrar Sesión',
-          icon: PhosphorIconsBold.signOut,
-          isLogout: true,
-        ),
-      ];
+    ProfileMenuItem(
+      label: 'Perfil',
+      iconAsset: 'assets/images/icons/user_icon.svg',
+      route: '/edit-profile',
+    ),
+    ProfileMenuItem(
+      label: 'Favoritos',
+      icon: PhosphorIconsBold.heart,
+      route: '/favorites',
+    ),
+    ProfileMenuItem(
+      label: 'Política de Privacidad',
+      iconAsset: 'assets/images/icons/password_icon.svg',
+      route: '/privacy-policy',
+    ),
+    ProfileMenuItem(
+      label: 'Configuración',
+      icon: PhosphorIconsBold.gear,
+      route: '/config',
+    ),
+    ProfileMenuItem(
+      label: 'Cerrar Sesión',
+      icon: PhosphorIconsBold.signOut,
+      isLogout: true,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
