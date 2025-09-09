@@ -3,6 +3,7 @@ import 'package:ezmanagement/src/presentation/ui/pages/first_boot_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/main_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/configuration/password_manager_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/configuration/role_management/role_management_screen.dart';
+import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/configuration/user_management_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/profile_edit_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/profile_settings_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/report/Report_schedule_screen.dart';
@@ -38,7 +39,7 @@ class RoutesApp {
       case configRoles:
         return MaterialPageRoute(builder: (_) => const RoleManagementScreen());
       case configUsers:
-        return MaterialPageRoute(builder: (_) => const RoleManagementScreen());
+        return MaterialPageRoute(builder: (_) => const UserManagementScreen());
       case reportSchedule:
         return MaterialPageRoute(builder: (_) => const ReportScheduleScreen());
       default:

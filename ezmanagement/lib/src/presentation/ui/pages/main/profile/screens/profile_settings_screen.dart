@@ -184,7 +184,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                 buildSettingsButton(
                   label: "Gestionar Usuarios",
                   iconAsset: 'assets/images/icons/users_icon.svg',
-                  onTap: () => Navigator.pushNamed(context, '/users'),
+                  onTap: () => Navigator.of(context).popAndPushNamed(RoutesApp.configUsers),
                   isDestructive: true,
                 ),
               ],
