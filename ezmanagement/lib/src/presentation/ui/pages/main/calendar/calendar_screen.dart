@@ -15,7 +15,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
-  // función de fuente responsiva como en tu Home
   double _rf(BuildContext context, double base,
       {double min = 12, double max = 34}) {
     final size = MediaQuery.of(context).size;
@@ -28,41 +27,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
+    final isDarkmode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      backgroundColor: isDarkmode ? EZColorsApp.darkBackgroud : Colors.white,
       body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader(context, screenHeight),
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(top: 20),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? EZColorsApp.darkBackgroud
-                      : Colors.white,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  ),
-                ),
-                child: SingleChildScrollView( // 👈 Scroll global
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildCalendar(context, screenHeight),
-                      const SizedBox(height: 12),
-                      _buildEventList(context),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: Column(
+            children: [
+              _buildHeader(context),
+              const SizedBox(height: 20),
+              _buildCalendar(context),
+              const SizedBox(height: 20),
+              _buildEventList(context),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -75,15 +55,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  Widget _buildHeader(BuildContext context, double screenHeight) {
+  Widget _buildHeader(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.only(
-        top: screenHeight * 0.04,
-        left: 20,
-        right: 20,
-        bottom: screenHeight * 0.04,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
       decoration: BoxDecoration(
         color: EZColorsApp.ezAppColor,
         borderRadius: const BorderRadius.only(
@@ -122,45 +97,42 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  Widget _buildCalendar(BuildContext context, double screenHeight) {
-    return SizedBox(
-      height: screenHeight * 0.50, 
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          border: Border.all(color: EZColorsApp.grayColor.withOpacity(.2)),
-          borderRadius: BorderRadius.circular(20),
+  Widget _buildCalendar(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        border: Border.all(color: EZColorsApp.grayColor.withOpacity(.2)),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: TableCalendar(
+        firstDay: DateTime.utc(2020, 1, 1),
+        lastDay: DateTime.utc(2030, 12, 31),
+        focusedDay: _focusedDay,
+        selectedDayPredicate: (day) {
+          return isSameDay(_selectedDay, day);
+        },
+        onDaySelected: (selectedDay, focusedDay) {
+          setState(() {
+            _selectedDay = selectedDay;
+            _focusedDay = focusedDay;
+          });
+        },
+        calendarFormat: CalendarFormat.month,
+        startingDayOfWeek: StartingDayOfWeek.monday,
+        headerStyle: const HeaderStyle(
+          formatButtonVisible: false,
+          titleCentered: true,
         ),
-        child: TableCalendar(
-          firstDay: DateTime.utc(2020, 1, 1),
-          lastDay: DateTime.utc(2030, 12, 31),
-          focusedDay: _focusedDay,
-          selectedDayPredicate: (day) {
-            return isSameDay(_selectedDay, day);
-          },
-          onDaySelected: (selectedDay, focusedDay) {
-            setState(() {
-              _selectedDay = selectedDay;
-              _focusedDay = focusedDay;
-            });
-          },
-          calendarFormat: CalendarFormat.month,
-          startingDayOfWeek: StartingDayOfWeek.monday,
-          headerStyle: const HeaderStyle(
-            formatButtonVisible: false,
-            titleCentered: true,
+        calendarStyle: CalendarStyle(
+          todayDecoration: BoxDecoration(
+            color: EZColorsApp.ezAppColor.withOpacity(.3),
+            shape: BoxShape.circle,
           ),
-          calendarStyle: CalendarStyle(
-            todayDecoration: BoxDecoration(
-              color: EZColorsApp.ezAppColor.withOpacity(.3),
-              shape: BoxShape.circle,
-            ),
-            selectedDecoration: BoxDecoration(
-              color: EZColorsApp.ezAppColor,
-              shape: BoxShape.circle,
-            ),
-            selectedTextStyle: const TextStyle(color: Colors.white),
+          selectedDecoration: BoxDecoration(
+            color: EZColorsApp.ezAppColor,
+            shape: BoxShape.circle,
           ),
+          selectedTextStyle: const TextStyle(color: Colors.white),
         ),
       ),
     );
@@ -194,6 +166,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       required String subtitle,
       required Color color}) {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Theme.of(context).brightness == Brightness.dark
