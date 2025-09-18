@@ -1,6 +1,7 @@
 
 import 'package:ezmanagement/src/inject/riverpod_usecase.dart';
 import 'package:ezmanagement/src/presentation/controllers/auth/authentication_controller.dart';
+import 'package:ezmanagement/src/presentation/controllers/role_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,5 +13,12 @@ AuthenticationController authenticationController(Ref ref){
     ref: ref,
     userUsecase: ref.watch(userUsecaseProvider),
     authenticationUsecase: ref.watch(authenticationUsecaseProvider),
+  );
+}
+
+@riverpod
+RoleController roleController(Ref ref){
+  return RoleController(
+    roleUsecase: ref.watch(roleUsecaseProvider),
   );
 }

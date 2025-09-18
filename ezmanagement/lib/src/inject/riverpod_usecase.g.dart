@@ -43,5 +43,22 @@ final userUsecaseProvider = AutoDisposeProvider<UserUsecase>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UserUsecaseRef = AutoDisposeProviderRef<UserUsecase>;
+String _$roleUsecaseHash() => r'cb75faa265ab8a522119e41c68b815ffd3010b0e';
+
+/// See also [roleUsecase].
+@ProviderFor(roleUsecase)
+final roleUsecaseProvider = AutoDisposeProvider<RoleUsecase>.internal(
+  roleUsecase,
+  name: r'roleUsecaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$roleUsecaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RoleUsecaseRef = AutoDisposeProviderRef<RoleUsecase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

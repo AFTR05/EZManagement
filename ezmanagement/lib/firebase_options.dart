@@ -41,54 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCYGrQFeRi_tsibJ2n0xJoDN-ZfHf4EYu8',
-    appId: '1:187488371361:web:47ba3307735203cd8326e0',
-    messagingSenderId: '187488371361',
-    projectId: 'invumycrew',
-    authDomain: 'invumycrew.firebaseapp.com',
-    databaseURL: 'https://invumycrew-default-rtdb.firebaseio.com',
-    storageBucket: 'invumycrew.firebasestorage.app',
-    measurementId: 'G-BDMYTT6Q11',
+    apiKey: 'AIzaSyBjWn12GiCd4CP6vgF9XFR-nOMGXqusB7w',
+    appId: '1:1096224199835:web:ea18991c2b25e71f7de23e',
+    messagingSenderId: '1096224199835',
+    projectId: 'ezmanagement-2828',
+    authDomain: 'ezmanagement-2828.firebaseapp.com',
+    storageBucket: 'ezmanagement-2828.firebasestorage.app',
+    measurementId: 'G-8TXZHXLGVT',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCHy-flWfysQQ8CUu3bAzlKUf5y7dqAS2g',
-    appId: '1:187488371361:android:c88fa92c3341230c8326e0',
-    messagingSenderId: '187488371361',
-    projectId: 'invumycrew',
-    databaseURL: 'https://invumycrew-default-rtdb.firebaseio.com',
-    storageBucket: 'invumycrew.firebasestorage.app',
+    apiKey: 'AIzaSyC3CtbCXgyj6VNjdP62d41xPLQ_M-W9F1s',
+    appId: '1:1096224199835:android:bd0c5fd001a962c57de23e',
+    messagingSenderId: '1096224199835',
+    projectId: 'ezmanagement-2828',
+    storageBucket: 'ezmanagement-2828.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDcjBU33TsuE0nA8gCRTLS6aExvOLO38Ok',
-    appId: '1:187488371361:ios:33cda8c14716e3dd8326e0',
-    messagingSenderId: '187488371361',
-    projectId: 'invumycrew',
-    databaseURL: 'https://invumycrew-default-rtdb.firebaseio.com',
-    storageBucket: 'invumycrew.firebasestorage.app',
+    apiKey: 'AIzaSyAzIce0Qdu4O7224Z1uLkPhlWQjjuqPr_o',
+    appId: '1:1096224199835:ios:7a0387dd5836da037de23e',
+    messagingSenderId: '1096224199835',
+    projectId: 'ezmanagement-2828',
+    storageBucket: 'ezmanagement-2828.firebasestorage.app',
     iosBundleId: 'com.example.ezmanagement',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDcjBU33TsuE0nA8gCRTLS6aExvOLO38Ok',
-    appId: '1:187488371361:ios:33cda8c14716e3dd8326e0',
-    messagingSenderId: '187488371361',
-    projectId: 'invumycrew',
-    databaseURL: 'https://invumycrew-default-rtdb.firebaseio.com',
-    storageBucket: 'invumycrew.firebasestorage.app',
+    apiKey: 'AIzaSyAzIce0Qdu4O7224Z1uLkPhlWQjjuqPr_o',
+    appId: '1:1096224199835:ios:7a0387dd5836da037de23e',
+    messagingSenderId: '1096224199835',
+    projectId: 'ezmanagement-2828',
+    storageBucket: 'ezmanagement-2828.firebasestorage.app',
     iosBundleId: 'com.example.ezmanagement',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCYGrQFeRi_tsibJ2n0xJoDN-ZfHf4EYu8',
-    appId: '1:187488371361:web:7cf16d6e656565388326e0',
-    messagingSenderId: '187488371361',
-    projectId: 'invumycrew',
-    authDomain: 'invumycrew.firebaseapp.com',
-    databaseURL: 'https://invumycrew-default-rtdb.firebaseio.com',
-    storageBucket: 'invumycrew.firebasestorage.app',
-    measurementId: 'G-947TS9CDT9',
+    apiKey: 'AIzaSyBjWn12GiCd4CP6vgF9XFR-nOMGXqusB7w',
+    appId: '1:1096224199835:web:50ae864ddc748c7f7de23e',
+    messagingSenderId: '1096224199835',
+    projectId: 'ezmanagement-2828',
+    authDomain: 'ezmanagement-2828.firebaseapp.com',
+    storageBucket: 'ezmanagement-2828.firebasestorage.app',
+    measurementId: 'G-LX8RKZ5QQ1',
   );
 
 }

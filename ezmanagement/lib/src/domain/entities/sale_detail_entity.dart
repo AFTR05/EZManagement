@@ -15,7 +15,6 @@ class SaleDetailEntity with EntityMixin {
   });
 
   factory SaleDetailEntity.fromMap(Map<String, dynamic> map, String id) {
-    // 'id' podría ser útil si decides usar un ID compuesto como 'saleId_productId'
     return SaleDetailEntity(
       productId: map['productId'] ?? '',
       saleId: map['saleId'] ?? '',
