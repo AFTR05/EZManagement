@@ -15,36 +15,40 @@ abstract class RoleRepository extends CrudRepository<RoleEntity> {
   }
 
   @override
-  Future<Either<Failure, dynamic>> createElement({required RoleEntity t}) {
+  Future<Either<Failure, RoleEntity>> createElement({required RoleEntity t}) {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, dynamic>> createElements({
+  Future<Either<Failure, List<RoleEntity>>> createElements({
+    required List<RoleEntity> ts,
+  }) {
+    throw UnimplementedError();
+  }
+
+  Stream<Either<Failure, List<RoleEntity>>> watchAllElements(){
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, RoleEntity>> updateElement({required RoleEntity t}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, List<RoleEntity>>> updateElements({
     required List<RoleEntity> ts,
   }) {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, dynamic>> updateElement({required RoleEntity t}) {
+  Future<Either<Failure, RoleEntity>> deleteElement({required RoleEntity t}) {
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, dynamic>> updateElements({
-    required List<RoleEntity> ts,
-  }) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, dynamic>> deleteElement({required RoleEntity t}) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, dynamic>> deleteElements({
+  Future<Either<Failure, List<RoleEntity>>> deleteElements({
     required List<RoleEntity> ts,
   }) {
     throw UnimplementedError();

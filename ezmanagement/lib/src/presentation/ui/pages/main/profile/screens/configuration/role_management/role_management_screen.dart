@@ -1,14 +1,18 @@
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
+import 'package:ezmanagement/src/domain/entities/role_entity.dart';
+import 'package:ezmanagement/src/inject/riverpod_presentation.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/custom_widgets/app_bar/custom_app_bar_widget.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/configuration/role_management/roles_table_widget.dart';
+import 'package:ezmanagement/src/routes_app.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
-class RoleManagementScreen extends StatelessWidget {
+class RoleManagementScreen extends ConsumerWidget {
   const RoleManagementScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final brand = EZColorsApp.ezAppColor;
     final scaffoldBg = isDark ? EZColorsApp.darkBackgroud : Colors.white;
@@ -19,51 +23,63 @@ class RoleManagementScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: scaffoldBg,
       appBar: CustomAppBarWidget(title: "Gestión de roles"),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text(
-                  'Roles',
-                  style: TextStyle(
-                    color: textPrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: "OpenSansHebrew",
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'Roles',
+                    style: TextStyle(
+                      color: textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: "OpenSansHebrew",
+                    ),
                   ),
-                ),
-                const Spacer(),
-                _AddRoleButton(
-                  onPressed: () {
-                    // TODO: acción agregar rol
-                  },
-                  brand: brand,
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // Tabla
-            Expanded(
-              child: RolesTableWidget(
-                roles: _mockRoles,
-                cardBg: scaffoldBg,
-                brand: brand,
-                borderColor: borderColor,
-                dividerColor: dividerColor,
-                textPrimary: textPrimary,
-                textMuted: textPrimary,
-                scaffoldBg: scaffoldBg,
-                onEdit: (role) {
-                  // TODO: acción editar rol
-                },
-                onMore: (ctx, role) => _showMoreOptions(ctx, role),
+                  const Spacer(),
+                  _AddRoleButton(
+                    onPressed: () {
+                      Navigator.of(
+                        context,
+                      ).pushNamed(RoutesApp.createRole);
+                    },
+                    brand: brand,
+                  ),
+                ],
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              Expanded(
+                child: StreamBuilder<List<RoleEntity>>(
+                  stream: ref.read(roleControllerProvider).watchAllElements(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      return const Center(child: Text('Error cargando roles'));
+                    }
+                    final roles = snapshot.data ?? const <RoleEntity>[];
+                    return RolesTableWidget(
+                      roles: roles,
+                      cardBg: scaffoldBg,
+                      brand: brand,
+                      borderColor: borderColor,
+                      dividerColor: dividerColor,
+                      textPrimary: textPrimary,
+                      textMuted: textPrimary,
+                      scaffoldBg: scaffoldBg,
+                      onEdit: (role) {},
+                      onMore: (ctx, role) => _showMoreOptions(ctx, role),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -116,25 +132,7 @@ class _AddRoleButton extends StatelessWidget {
   }
 }
 
-class RoleItem {
-  final String name;
-  final List<String> assignees;
-  RoleItem({required this.name, required this.assignees});
-}
-
-final _mockRoles = <RoleItem>[
-  RoleItem(name: 'God of\nGoods', assignees: ['A', 'B', 'C']),
-  RoleItem(name: 'God of\nKnowledge', assignees: []),
-  RoleItem(name: 'God of\nStorytelling', assignees: ['M', 'K']),
-  RoleItem(name: 'God of\nSupport', assignees: []),
-  RoleItem(name: 'God of\nAdventure', assignees: ['R', 'P', 'X']),
-  RoleItem(name: 'Shiny\nHunter', assignees: ['H', 'U', 'V', 'W']),
-  RoleItem(name: 'Contest\nCoordinator', assignees: ['C', 'D', 'E', 'F']),
-  RoleItem(name: 'Shiny\nPokemons', assignees: ['S', 'H', 'N', 'Q']),
-  RoleItem(name: 'Evolution\nExpert', assignees: []),
-];
-
-void _showMoreOptions(BuildContext context, RoleItem role) {
+void _showMoreOptions(BuildContext context, RoleEntity role) {
   showModalBottomSheet(
     context: context,
     showDragHandle: true,
@@ -149,7 +147,7 @@ void _showMoreOptions(BuildContext context, RoleItem role) {
           children: [
             ListTile(
               leading: const Icon(Icons.edit_outlined),
-              title: Text('Editar ${role.name.replaceAll('\n', ' ')}'),
+              title: Text('Editar ${role.roleName.replaceAll('\n', ' ')}'),
               onTap: () => Navigator.pop(context),
             ),
             ListTile(
@@ -163,7 +161,7 @@ void _showMoreOptions(BuildContext context, RoleItem role) {
                 color: EZColorsApp.ezAppColor,
               ),
               title: Text(
-                'Eliminar ${role.name.replaceAll('\n', ' ')}',
+                'Eliminar ${role.roleName.replaceAll('\n', ' ')}',
                 style: TextStyle(
                   fontFamily: "OpenSansHebrew",
                   color: EZColorsApp.ezAppColor,

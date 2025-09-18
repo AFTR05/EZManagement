@@ -1,12 +1,11 @@
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
-import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/configuration/role_management/role_management_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:ezmanagement/src/domain/entities/role_entity.dart';import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class RolesTableWidget extends StatelessWidget {
-  final List<RoleItem> roles;
-  final void Function(RoleItem role) onEdit;
-  final void Function(BuildContext context, RoleItem role) onMore;
+  final List<RoleEntity> roles;
+  final void Function(RoleEntity role) onEdit;
+  final void Function(BuildContext context, RoleEntity role) onMore;
 
   final Color cardBg;
   final Color brand;
@@ -34,28 +33,19 @@ class RolesTableWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: cardBg,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.18 : 0.06),
-            blurRadius: 14,
-            offset: const Offset(0, 6),
-          ),
-        ],
-        border: Border.all(color: borderColor),
-      ),
+    return SingleChildScrollView(
       child: Column(
         children: [
           // Header
           Container(
             decoration: BoxDecoration(
               color: brand,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(14),
+              borderRadius: BorderRadius.vertical(
+                top: const Radius.circular(14),
+                // Si no hay roles, redondear también la parte inferior
+                bottom: roles.isEmpty ? const Radius.circular(14) : Radius.zero,
               ),
+              border: Border.all(color: borderColor),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: const Row(
@@ -97,24 +87,80 @@ class RolesTableWidget extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
-            child: ListView.separated(
-              itemCount: roles.length,
-              separatorBuilder: (_, _) =>
-                  Divider(height: 1, thickness: 1, color: dividerColor),
-              itemBuilder: (context, i) {
-                final role = roles[i];
-                return _RoleRow(
-                  role: role,
-                  textColor: textPrimary,
-                  mutedColor: textMuted,
-                  borderOnAvatar: scaffoldBg,
-                  onEdit: () => onEdit(role),
-                  onMore: () => onMore(context, role),
-                );
-              },
+
+          // Contenido - Solo mostrar si hay roles
+          if (roles.isNotEmpty)
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(14),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(14),
+                  ),
+                  // borde solo de la tabla
+                  border: Border.all(color: borderColor, width: 1),
+                  color: cardBg,
+                ),
+                child: ListView.separated(
+                  shrinkWrap: true, // <- toma solo el alto necesario
+                  physics:
+                      const NeverScrollableScrollPhysics(), // sin scroll interno
+                  padding: const EdgeInsets.only(
+                    bottom: 12,
+                  ), // aire para la última fila
+                  itemCount: roles.length,
+                  separatorBuilder: (_, __) =>
+                      Divider(height: 1, thickness: 1, color: dividerColor),
+                  itemBuilder: (context, i) {
+                    final role = roles[i];
+                    return _RoleRow(
+                      role: role,
+                      textColor: textPrimary,
+                      mutedColor: textMuted,
+                      borderOnAvatar: scaffoldBg,
+                      onEdit: () => onEdit(role),
+                      onMore: () => onMore(context, role),
+                    );
+                  },
+                ),
+              ),
             ),
-          ),
+
+          // Estado vacío - Mostrar solo si no hay roles
+          if (roles.isEmpty)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.group_outlined, size: 64, color: textMuted),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No hay roles disponibles',
+                    style: TextStyle(
+                      fontFamily: "OpenSansHebrew",
+                      color: textPrimary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Crea tu primer rol para comenzar a gestionar permisos',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: "OpenSansHebrew",
+                      color: textMuted,
+                      fontSize: 14,
+                      height: 1.4,
+                    ),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );
@@ -122,7 +168,7 @@ class RolesTableWidget extends StatelessWidget {
 }
 
 class _RoleRow extends StatelessWidget {
-  final RoleItem role;
+  final RoleEntity role;
   final VoidCallback onEdit;
   final VoidCallback onMore;
   final Color textColor;
@@ -153,7 +199,7 @@ class _RoleRow extends StatelessWidget {
       child: Row(
         children: [
           // Nombre del rol
-          Expanded(flex: 2, child: Text(role.name, style: textStyle)),
+          Expanded(flex: 2, child: Text(role.roleName, style: textStyle)),
 
           // Avatares
           Expanded(
@@ -161,7 +207,7 @@ class _RoleRow extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: _AvatarGroup(
-                initials: role.assignees,
+                initials: [], //role.assignees,
                 maxVisible: 4,
                 borderColor: borderOnAvatar,
               ),
