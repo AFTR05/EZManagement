@@ -8,7 +8,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
 
+/// Pantalla de configuración del perfil.
+///
+/// Permite al usuario gestionar opciones como administrador de contraseñas,
+/// eliminación de cuenta, cambio de tema y gestión de roles y usuarios.
+///
+/// Maneja estado de carga para mostrar indicador mientras se procesa eliminación.
 class ProfileSettingsScreen extends StatefulWidget {
+  /// Constructor de ProfileSettingsScreen.
   const ProfileSettingsScreen({super.key});
 
   @override
@@ -16,26 +23,34 @@ class ProfileSettingsScreen extends StatefulWidget {
 }
 
 class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
+  /// Estado que indica si hay una operación en carga.
   bool isLoading = false;
 
+  /// Muestra el diálogo para confirmar eliminación de cuenta.
+  ///
+  /// Si el usuario confirma, simula proceso de eliminación con retraso
+  /// y luego navega al login eliminando historial de rutas.
   Future<void> _showDeleteDialog(BuildContext context) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => const DeleteAccountDialog(),
     );
 
+    // Si el usuario confirma la eliminación
     if (confirmed == true) {
       setState(() {
-        isLoading = true;
+        isLoading = true; // Activa indicador de carga
       });
 
+      // Simula procesamiento (1 segundo)
       await Future.delayed(const Duration(seconds: 1));
 
       setState(() {
-        isLoading = false;
+        isLoading = false; // Desactiva indicador de carga
       });
 
       if (mounted) {
+        // Muestra mensaje breve de confirmación
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Cuenta eliminada correctamente.'),
@@ -43,8 +58,10 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
           ),
         );
 
+        // Espera para que usuario lea el mensaje
         await Future.delayed(const Duration(milliseconds: 1500));
 
+        // Navega a pantalla de login eliminando historial
         if (mounted) {
           Navigator.pushNamedAndRemoveUntil(
             context,
@@ -58,14 +75,26 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Detecta si el tema es oscuro
     final isDarkmode = Theme.of(context).brightness == Brightness.dark;
+    // Color principal azul de la app
     final mainBlue = EZColorsApp.ezAppColor;
+    // Color de fondo según tema
     final bgColor = isDarkmode ? EZColorsApp.darkBackgroud : Colors.white;
+    // Color para sombras según tema
     final shadowColor = isDarkmode
-        ? Colors.black.withValues(alpha: 0.3)
-        : Colors.black.withValues(alpha: .09);
+        ? Colors.black.withAlpha((0.3 * 255).toInt())
+        : Colors.black.withAlpha((0.09 * 255).toInt());
+    // Color para tarjetas según tema
     final cardColor = isDarkmode ? EZColorsApp.darkGray : Colors.white;
 
+    /// Construye un botón personalizado para las opciones de configuración.
+    ///
+    /// Parámetros:
+    /// - [label]: texto que describe la opción.
+    /// - [iconAsset]: ruta del icono SVG.
+    /// - [onTap]: función que se ejecuta al pulsar el botón.
+    /// - [isDestructive]: indica si la acción es potencialmente destructiva (no afecta acá el comportamiento).
     Widget buildSettingsButton({
       required String label,
       required String iconAsset,
@@ -100,7 +129,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               leading: SvgPicture.asset(iconAsset, width: 21, height: 21),
               title: Text(
                 label,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'OpenSansHebrew',
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -108,7 +137,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               ),
               trailing: Icon(
                 PhosphorIconsBold.caretRight,
-                color: mainBlue.withValues(alpha: 0.6),
+                color: mainBlue.withAlpha((0.6 * 255).toInt()),
                 size: 20,
               ),
               onTap: onTap,
@@ -121,7 +150,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
     return Scaffold(
       backgroundColor: bgColor,
-      appBar: CustomAppBarWidget(title: "Configuracion"),
+      appBar: const CustomAppBarWidget(title: "Configuracion"),
       body: Stack(
         children: [
           Padding(
@@ -129,25 +158,29 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Botón para ir al administrador de contraseñas
                 buildSettingsButton(
                   label: "Administrador De Contraseñas",
                   iconAsset: 'assets/images/icons/key_icon.svg',
-                  onTap: () =>
-                      Navigator.pushNamed(context, '/password-manager'),
+                  onTap: () => Navigator.pushNamed(context, '/password-manager'),
                 ),
+                // Botón para eliminar cuenta con diálogo de confirmación
                 buildSettingsButton(
                   label: "Eliminar Cuenta",
                   iconAsset: 'assets/images/icons/user_icon.svg',
                   onTap: () => _showDeleteDialog(context),
                   isDestructive: true,
                 ),
-                ThemeSwitchButton(),
+                // Botón para cambiar tema con interruptor
+                const ThemeSwitchButton(),
+                // Botón para gestionar roles
                 buildSettingsButton(
                   label: "Gestionar Roles",
                   iconAsset: 'assets/images/icons/role_icon.svg',
                   onTap: () => Navigator.of(context).popAndPushNamed(RoutesApp.configRoles),
                   isDestructive: true,
                 ),
+                // Botón para gestionar usuarios
                 buildSettingsButton(
                   label: "Gestionar Usuarios",
                   iconAsset: 'assets/images/icons/users_icon.svg',
@@ -157,12 +190,13 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               ],
             ),
           ),
+          // Indicador de carga sobre la pantalla mientras isLoading es true
           if (isLoading)
             Positioned.fill(
               child: AbsorbPointer(
                 absorbing: true,
                 child: ColoredBox(
-                  color: Colors.black.withValues(alpha: 0.4),
+                  color: Colors.black.withAlpha((0.4 * 255).toInt()),
                   child: Center(
                     child: SizedBox(
                       height: 48,

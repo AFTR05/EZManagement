@@ -1,3 +1,4 @@
+import 'package:ezmanagement/src/routes_app.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart'; // <- tr()
 import 'package:ezmanagement/translations/locale_keys.g.dart'; // <- LocaleKeys
@@ -33,7 +34,7 @@ class ReportScreen extends StatelessWidget {
         'subtitleKey': LocaleKeys.reportScheduleSubtitle,
         'icon': Icons.schedule_rounded,
         'color': Colors.orange,
-        'onTap': () => debugPrint('Navegando a Programación De Reportes'),
+        'onTap': () => Navigator.pushNamed(context, RoutesApp.reportSchedule),
       },
     ];
 
