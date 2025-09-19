@@ -1,46 +1,45 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:ezmanagement/src/inject/riverpod_presentation.dart';
+import 'package:ezmanagement/src/routes_app.dart';
+import 'package:ezmanagement/translations/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-/// [LogoutConfirmationDialog] muestra una ventana de confirmación
-/// para cerrar sesión, utilizando un ValueNotifier para gestionar el estado de carga.
-///
-/// El diálogo bloquea el cierre durante el procesamiento y muestra un indicador de progreso.
-class LogoutConfirmationDialog extends StatelessWidget {
-  /// Constructor de LogoutConfirmationDialog.
+class LogoutConfirmationDialog extends ConsumerWidget {
   const LogoutConfirmationDialog({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Detecta si el modo oscuro está activado.
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDarkmode = Theme.of(context).brightness == Brightness.dark;
-    // Color principal de la app.
     final mainBlue = EZColorsApp.ezAppColor;
-    // Color de fondo según el modo.
     final bgColor = isDarkmode ? EZColorsApp.darkBackgroud : Colors.white;
-    // Color del texto según el modo.
     final textColor = isDarkmode ? Colors.white : Colors.black87;
 
-    /// Controla si el proceso de cierre de sesión está en curso.
-    /// Cuando isLoading.value es true, se muestra una animación loading y se bloquea la acción.
     final ValueNotifier<bool> isLoading = ValueNotifier(false);
 
-    /// Acción que confirma el cierre de sesión tras simular un procesamiento.
     Future<void> onConfirm() async {
       isLoading.value = true;
       await Future.delayed(const Duration(seconds: 1));
-      if (context.mounted) {
+      final logOutResult = await ref
+          .read(authenticationControllerProvider)
+          .logout();
+      if (!context.mounted) return;
+      if (logOutResult) {
+        Navigator.of(
+          context,
+        ).pushNamedAndRemoveUntil(RoutesApp.login, (route) => false);
         isLoading.value = false;
-        Navigator.pop(context, true); // Retorna true si confirma.
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(LocaleKeys.logoutError.tr())));
       }
     }
 
-    // El widget está envuelto en WillPopScope para evitar que se cierre
-    // mientras el proceso de cierre de sesión está en curso.
     return WillPopScope(
-      // Permite cerrar solo si no está cargando.
       onWillPop: () async => !isLoading.value,
-      // ValueListenableBuilder actualiza la UI cuando isLoading cambia.
       child: ValueListenableBuilder<bool>(
         valueListenable: isLoading,
         builder: (context, loading, _) {
@@ -48,11 +47,12 @@ class LogoutConfirmationDialog extends StatelessWidget {
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: bgColor,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
             ),
             child: Stack(
               children: [
-                // El contenido principal, se deshabilita temporalmente si loading es true.
                 Opacity(
                   opacity: loading ? 0.5 : 1,
                   child: AbsorbPointer(
@@ -60,7 +60,6 @@ class LogoutConfirmationDialog extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Título del diálogo.
                         Text(
                           'Cerrar Sesión',
                           style: TextStyle(
@@ -72,7 +71,6 @@ class LogoutConfirmationDialog extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 12),
-                        // Mensaje principal de confirmación.
                         Text(
                           '¿Estás seguro de que deseas cerrar sesión?',
                           style: TextStyle(
@@ -83,22 +81,28 @@ class LogoutConfirmationDialog extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 28),
-                        // Botones de acción: Cancelar y Sí, Cerrar Sesión.
                         Row(
                           children: [
                             Expanded(
                               child: TextButton.icon(
-                                // Al pulsar Cancelar, retorna false si no está loading.
-                                onPressed: loading ? null : () => Navigator.pop(context, false),
+                                onPressed: loading
+                                    ? null
+                                    : () => Navigator.pop(context, false),
                                 icon: Icon(
                                   PhosphorIconsBold.x,
                                   color: isDarkmode ? Colors.white : mainBlue,
                                 ),
                                 style: TextButton.styleFrom(
-                                  backgroundColor: mainBlue.withAlpha(51), // 0.20*255=51
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                  backgroundColor: mainBlue.withValues(
+                                    alpha: 0.20,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                   side: BorderSide.none,
-                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
                                 ),
                                 label: Text(
                                   'Cancelar',
@@ -114,7 +118,6 @@ class LogoutConfirmationDialog extends StatelessWidget {
                             const SizedBox(width: 16),
                             Expanded(
                               child: ElevatedButton.icon(
-                                // Al confirmar, ejecuta onConfirm si no está loading.
                                 onPressed: loading ? null : onConfirm,
                                 icon: const Icon(
                                   PhosphorIconsBold.check,
@@ -131,8 +134,12 @@ class LogoutConfirmationDialog extends StatelessWidget {
                                 ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: mainBlue,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
                                 ),
                               ),
                             ),
@@ -142,11 +149,10 @@ class LogoutConfirmationDialog extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Indicador visual de carga si loading es true.
                 if (loading)
                   Positioned.fill(
                     child: Container(
-                      color: Colors.black.withAlpha(64), // 0.25*255=64
+                      color: Colors.black.withValues(alpha: 0.25),
                       child: Center(
                         child: SizedBox(
                           height: 48,

@@ -50,4 +50,36 @@ class UserUsecase {
     );
     return userCRUDRepository.createElement(t: user);
   }
+
+  Future<Either<Failure, UserEntity>> deactivateUser({
+    required UserEntity user
+  }) {
+    final deactivateUser = UserEntity(
+      uid: user.uid,
+      email: user.email,
+      name: user.name,
+      roleId: user.roleId,
+      roleName: user.roleName,
+      createdAt: user.createdAt,
+      status: StateEnum.inactive,
+      updatedAt: DateTime.now()
+    );
+    return userCRUDRepository.updateElement(t: deactivateUser);
+  }
+
+  Future<Either<Failure, UserEntity>> activateUser({
+    required UserEntity user
+  }) {
+    final deactivateUser = UserEntity(
+      uid: user.uid,
+      email: user.email,
+      name: user.name,
+      roleId: user.roleId,
+      roleName: user.roleName,
+      createdAt: user.createdAt,
+      status: StateEnum.active,
+      updatedAt: DateTime.now()
+    );
+    return userCRUDRepository.updateElement(t: deactivateUser);
+  }
 }

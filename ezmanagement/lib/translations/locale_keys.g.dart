@@ -39,5 +39,6 @@ abstract class  LocaleKeys {
   static const profileEditUpdatePhotoTitle = 'profileEditUpdatePhotoTitle';
   static const profileEditSelectImageButton = 'profileEditSelectImageButton';
   static const profileEditCancelButton = 'profileEditCancelButton';
+  static const logoutError = 'logoutError';
 
 }

@@ -1,5 +1,6 @@
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
 import 'package:ezmanagement/src/domain/entities/user_entity.dart';
+import 'package:ezmanagement/src/domain/enum/state_enum.dart';
 import 'package:ezmanagement/src/inject/riverpod_presentation.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/custom_widgets/app_bar/custom_app_bar_widget.dart';
 import 'package:ezmanagement/src/routes_app.dart';
@@ -136,10 +137,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
 
                 final sorted = [...users]
                   ..sort((a, b) {
-                    final cmp = cmpString(
-                      a.name,
-                      b.name,
-                    );
+                    final cmp = cmpString(a.name, b.name);
                     return _sortAsc ? cmp : -cmp;
                   });
                 return ListView.separated(
@@ -150,6 +148,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                     final u = sorted[i];
                     return _buildUserCard(
                       context: context,
+                      user: u,
                       name: (u.name?.isNotEmpty ?? false)
                           ? u.name!
                           : '(Sin nombre)',
@@ -169,6 +168,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
 
   Widget _buildUserCard({
     required BuildContext context,
+    required UserEntity user,
     required String name,
     required String role,
   }) {
@@ -294,16 +294,25 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
               const SizedBox(height: 8),
               IconButton(
                 icon: SvgPicture.asset(
-                  "assets/images/icons/delete_icon.svg",
-                  width: 20,
-                  height: 20,
+                  user.status == StateEnum.active
+                      ? "assets/images/icons/delete_icon.svg"
+                      : "assets/images/icons/reactivate_icon.svg",
+                  width: user.status == StateEnum.active ? 20 : 25,
+                  height: user.status == StateEnum.active ? 20 : 25,
                   colorFilter: ColorFilter.mode(
                     EZColorsApp.ezAppColor,
                     BlendMode.srcIn,
                   ),
                 ),
                 onPressed: () {
-                  _showDeleteDialog(context, name, brand, textPrimary, isDark);
+                  _showDeleteDialog(
+                    context,
+                    name,
+                    brand,
+                    textPrimary,
+                    isDark,
+                    user,
+                  );
                 },
                 constraints: const BoxConstraints(),
                 padding: const EdgeInsets.all(8),
@@ -321,6 +330,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     Color brand,
     Color textPrimary,
     bool isDark,
+    UserEntity user,
   ) {
     showDialog(
       context: context,
@@ -328,7 +338,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
         return AlertDialog(
           backgroundColor: isDark ? EZColorsApp.darkBackgroud : Colors.white,
           title: Text(
-            'Eliminar usuario',
+            user.status == StateEnum.active ? 'Eliminar usuario' : "Reactivar",
             style: TextStyle(
               color: textPrimary,
               fontFamily: "OpenSansHebrew",
@@ -336,7 +346,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
             ),
           ),
           content: Text(
-            '¿Estás seguro de que deseas eliminar a $userName?',
+            '¿Estás seguro de que deseas ${user.status == StateEnum.active ? "eliminar" : "reactivar"} a $userName?',
             style: TextStyle(color: textPrimary, fontFamily: "OpenSansHebrew"),
           ),
           actions: [
@@ -352,11 +362,19 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                ref
+                    .read(userControllerProvider)
+                    .deactivateActivateUser(
+                      user: user,
+                      isDeactivate: user.status == StateEnum.active,
+                    );
+                Navigator.of(
+                  context,
+                ).pop(RoutesApp.configUsers);
                 // TODO: implementar eliminación
               },
               child: Text(
-                'Eliminar',
+                user.status == StateEnum.active ? "Eliminar" : "Reactivar",
                 style: TextStyle(
                   color: brand,
                   fontFamily: "OpenSansHebrew",

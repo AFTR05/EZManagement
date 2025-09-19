@@ -177,14 +177,14 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                 buildSettingsButton(
                   label: "Gestionar Roles",
                   iconAsset: 'assets/images/icons/role_icon.svg',
-                  onTap: () => Navigator.of(context).popAndPushNamed(RoutesApp.configRoles),
+                  onTap: () => Navigator.of(context).pushNamed(RoutesApp.configRoles),
                   isDestructive: true,
                 ),
                 // Botón para gestionar usuarios
                 buildSettingsButton(
                   label: "Gestionar Usuarios",
                   iconAsset: 'assets/images/icons/users_icon.svg',
-                  onTap: () => Navigator.of(context).popAndPushNamed(RoutesApp.configUsers),
+                  onTap: () => Navigator.of(context).pushNamed(RoutesApp.configUsers),
                   isDestructive: true,
                 ),
               ],

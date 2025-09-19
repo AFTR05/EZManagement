@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
 import 'package:ezmanagement/src/domain/entities/role_entity.dart';
+import 'package:ezmanagement/src/domain/entities/ui/role_item_entity.dart';
+import 'package:ezmanagement/src/domain/entities/user_entity.dart';
 import 'package:ezmanagement/src/inject/riverpod_presentation.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/custom_widgets/app_bar/custom_app_bar_widget.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/configuration/role_management/roles_table_widget.dart';
@@ -51,8 +55,8 @@ class RoleManagementScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               Expanded(
-                child: StreamBuilder<List<RoleEntity>>(
-                  stream: ref.read(roleControllerProvider).watchAllElements(),
+                child: StreamBuilder<List<RoleItemEntity>>(
+                  stream: _watchRoleItems(ref),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
@@ -60,9 +64,9 @@ class RoleManagementScreen extends ConsumerWidget {
                     if (snapshot.hasError) {
                       return const Center(child: Text('Error cargando roles'));
                     }
-                    final roles = snapshot.data ?? const <RoleEntity>[];
+                    final roleItems = snapshot.data ?? const <RoleItemEntity>[];
                     return RolesTableWidget(
-                      roles: roles,
+                      roles: roleItems,
                       cardBg: scaffoldBg,
                       brand: brand,
                       borderColor: borderColor,
@@ -70,8 +74,8 @@ class RoleManagementScreen extends ConsumerWidget {
                       textPrimary: textPrimary,
                       textMuted: textPrimary,
                       scaffoldBg: scaffoldBg,
-                      onEdit: (role) {},
-                      onMore: (ctx, role) => _showMoreOptions(ctx, role),
+                      onEdit: (roleItem) {},
+                      onMore: (ctx, roleItem) => _showMoreOptions(ctx, roleItem),
                     );
                   },
                 ),
@@ -172,4 +176,70 @@ void _showMoreOptions(BuildContext context, RoleEntity role) {
       ),
     ),
   );
+}
+
+Stream<List<RoleEntity>> _watchRoles(WidgetRef ref) {
+  return ref.read(roleControllerProvider).watchAllElements();
+}
+
+Stream<List<UserEntity>> _watchUsers(WidgetRef ref) {
+  return ref.read(userControllerProvider).watchAllElements();
+}
+
+Stream<List<RoleItemEntity>> _watchRoleItems(WidgetRef ref) {
+  final roles$ = _watchRoles(ref);
+  final users$ = _watchUsers(ref);
+  return _combineRoleItems(roles$, users$);
+}
+
+Stream<List<RoleItemEntity>> _combineRoleItems(
+  Stream<List<RoleEntity>> roles$,
+  Stream<List<UserEntity>> users$,
+) {
+  final controller = StreamController<List<RoleItemEntity>>.broadcast();
+  List<RoleEntity> roles = const [];
+  List<UserEntity> users = const [];
+
+  late final StreamSubscription<List<RoleEntity>> rolesSub;
+  late final StreamSubscription<List<UserEntity>> usersSub;
+
+  void emit() => controller.add(_composeRoleItems(roles, users));
+
+  rolesSub = roles$.listen((r) {
+    roles = r;
+    emit();
+  }, onError: controller.addError);
+
+  usersSub = users$.listen((u) {
+    users = u;
+    emit();
+  }, onError: controller.addError);
+
+  controller.onCancel = () async {
+    await rolesSub.cancel();
+    await usersSub.cancel();
+  };
+
+  return controller.stream;
+}
+
+List<RoleItemEntity> _composeRoleItems(
+  List<RoleEntity> roles,
+  List<UserEntity> users,
+) {
+  final byRoleId = <String, List<UserEntity>>{};
+  for (final u in users) {
+    final rid = (u.roleId ?? '').trim();
+    if (rid.isEmpty) continue;
+    (byRoleId[rid] ??= <UserEntity>[]).add(u);
+  }
+
+  return roles
+      .map(
+        (r) => RoleItemEntity(
+          role: r,
+          users: byRoleId[r.id] ?? const <UserEntity>[],
+        ),
+      )
+      .toList();
 }

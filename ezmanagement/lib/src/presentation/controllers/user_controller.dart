@@ -42,4 +42,13 @@ class UserController {
       (either) => either.fold((_) => const <UserEntity>[], (list) => list),
     );
   }
+
+  Future<void> deactivateActivateUser({
+    required UserEntity user,
+    required bool isDeactivate,
+  }) async {
+    isDeactivate
+        ? await _userUsecase.deactivateUser(user: user)
+        : await _userUsecase.activateUser(user: user);
+  }
 }
