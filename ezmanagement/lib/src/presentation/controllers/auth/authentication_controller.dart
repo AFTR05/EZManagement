@@ -149,6 +149,16 @@ class AuthenticationController extends ChangeNotifier {
     return ref.read(loginProviderProvider);
   }
 
+  Future<UserEntity?> getUserLog() async {
+    final result = await userUsecase.getAccount();
+    return result.fold((_) => null, (user) => user);
+  }
+
+  Future<String> getUserName() async {
+    final u = await getUserLog();
+    return u?.name ?? '';
+  }
+
   Future<void> loadCurrentSession() async {
     final res = await authenticationUsecase.currentSession();
     res.fold(
