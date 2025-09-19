@@ -6,6 +6,7 @@ import 'package:ezmanagement/src/domain/usecases/authentication_usecase.dart';
 import 'package:ezmanagement/src/domain/usecases/user_usecase.dart';
 import 'package:ezmanagement/src/inject/app_states/auth_loading_provider.dart';
 import 'package:ezmanagement/src/inject/states_providers/login_provider.dart';
+import 'package:ezmanagement/src/presentation/providers_ui/bottom_nav_bar_state.dart';
 import 'package:ezmanagement/src/routes_app.dart';
 import 'package:ezmanagement/src/utils/scaffold_utils.dart';
 import 'package:flutter/material.dart';
@@ -98,6 +99,26 @@ class AuthenticationController extends ChangeNotifier {
       }
       return Left(failure);
     }
+  }
+
+  Future<bool> logout() async {
+    final result = await authenticationUsecase.logout();
+    final ok = result.fold(
+      (failure) {
+        _errorMessage = failure.message;
+        return false;
+      },
+      (_) {
+        setAccountToState(account: null);
+        _profile = null;
+        _errorMessage = null;
+        return true;
+      },
+    );
+    await authenticationUsecase.clearRememberMe();
+    ref.read(bottomNavBarStateProvider.notifier).select(0);
+    notifyListeners();
+    return ok;
   }
 
   Future<bool> isLoggedUser() async {

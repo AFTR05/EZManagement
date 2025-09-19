@@ -1,12 +1,17 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:ezmanagement/src/inject/riverpod_presentation.dart';
+import 'package:ezmanagement/src/routes_app.dart';
+import 'package:ezmanagement/translations/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class LogoutConfirmationDialog extends StatelessWidget {
+class LogoutConfirmationDialog extends ConsumerWidget {
   const LogoutConfirmationDialog({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDarkmode = Theme.of(context).brightness == Brightness.dark;
     final mainBlue = EZColorsApp.ezAppColor;
     final bgColor = isDarkmode ? EZColorsApp.darkBackgroud : Colors.white;
@@ -16,10 +21,20 @@ class LogoutConfirmationDialog extends StatelessWidget {
 
     Future<void> onConfirm() async {
       isLoading.value = true;
-      await Future.delayed(const Duration(seconds: 1)); 
-      if (context.mounted) {
+      await Future.delayed(const Duration(seconds: 1));
+      final logOutResult = await ref
+          .read(authenticationControllerProvider)
+          .logout();
+      if (!context.mounted) return;
+      if (logOutResult) {
+        Navigator.of(
+          context,
+        ).pushNamedAndRemoveUntil(RoutesApp.login, (route) => false);
         isLoading.value = false;
-        Navigator.pop(context, true);
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(LocaleKeys.logoutError.tr())));
       }
     }
 
@@ -32,7 +47,9 @@ class LogoutConfirmationDialog extends StatelessWidget {
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: bgColor,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
             ),
             child: Stack(
               children: [
@@ -68,16 +85,24 @@ class LogoutConfirmationDialog extends StatelessWidget {
                           children: [
                             Expanded(
                               child: TextButton.icon(
-                                onPressed: loading ? null : () => Navigator.pop(context, false),
+                                onPressed: loading
+                                    ? null
+                                    : () => Navigator.pop(context, false),
                                 icon: Icon(
                                   PhosphorIconsBold.x,
                                   color: isDarkmode ? Colors.white : mainBlue,
                                 ),
                                 style: TextButton.styleFrom(
-                                  backgroundColor: mainBlue.withValues(alpha: 0.20),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                  backgroundColor: mainBlue.withValues(
+                                    alpha: 0.20,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                   side: BorderSide.none,
-                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
                                 ),
                                 label: Text(
                                   'Cancelar',
@@ -109,8 +134,12 @@ class LogoutConfirmationDialog extends StatelessWidget {
                                 ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: mainBlue,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
                                 ),
                               ),
                             ),

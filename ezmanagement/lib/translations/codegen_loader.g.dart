@@ -50,7 +50,8 @@ class CodegenLoader extends AssetLoader{
   "profileEditUpdatedSnack": "Data updated",
   "profileEditUpdatePhotoTitle": "Update profile picture",
   "profileEditSelectImageButton": "Select image",
-  "profileEditCancelButton": "Cancel"
+  "profileEditCancelButton": "Cancel",
+  "logoutError": "Couldn't sign you out. Please try again."
 };
 static const Map<String,dynamic> _es = {
   "fieldIsRequired": "El campo es requerido",
@@ -89,7 +90,8 @@ static const Map<String,dynamic> _es = {
   "profileEditUpdatedSnack": "Datos actualizados",
   "profileEditUpdatePhotoTitle": "Actualizar foto de perfil",
   "profileEditSelectImageButton": "Seleccionar imagen",
-  "profileEditCancelButton": "Cancelar"
+  "profileEditCancelButton": "Cancelar",
+  "logoutError": "No se pudo cerrar sesión. Inténtalo de nuevo."
 };
 static const Map<String,dynamic> _zh = {
   "fieldIsRequired": "此字段为必填项",
@@ -128,7 +130,8 @@ static const Map<String,dynamic> _zh = {
   "profileEditUpdatedSnack": "数据已更新",
   "profileEditUpdatePhotoTitle": "更新头像",
   "profileEditSelectImageButton": "选择图片",
-  "profileEditCancelButton": "取消"
+  "profileEditCancelButton": "取消",
+  "logoutError": "退出登录失败。请重试。"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en": _en, "es": _es, "zh": _zh};
 }

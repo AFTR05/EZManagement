@@ -1,9 +1,14 @@
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
-import 'package:ezmanagement/src/domain/entities/role_entity.dart';import 'package:flutter/material.dart';
+import 'package:ezmanagement/src/core/utils/string_utils.dart';
+import 'package:ezmanagement/src/domain/entities/role_entity.dart';
+import 'package:ezmanagement/src/domain/entities/ui/role_item_entity.dart';
+import 'package:ezmanagement/src/domain/entities/user_entity.dart';
+import 'package:ezmanagement/src/domain/enum/state_enum.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class RolesTableWidget extends StatelessWidget {
-  final List<RoleEntity> roles;
+  final List<RoleItemEntity> roles;
   final void Function(RoleEntity role) onEdit;
   final void Function(BuildContext context, RoleEntity role) onMore;
 
@@ -31,8 +36,6 @@ class RolesTableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -111,17 +114,17 @@ class RolesTableWidget extends StatelessWidget {
                     bottom: 12,
                   ), // aire para la última fila
                   itemCount: roles.length,
-                  separatorBuilder: (_, __) =>
+                  separatorBuilder: (_, _) =>
                       Divider(height: 1, thickness: 1, color: dividerColor),
                   itemBuilder: (context, i) {
-                    final role = roles[i];
+                    final roleItem = roles[i];
                     return _RoleRow(
-                      role: role,
+                      roleItem: roleItem,
                       textColor: textPrimary,
                       mutedColor: textMuted,
                       borderOnAvatar: scaffoldBg,
-                      onEdit: () => onEdit(role),
-                      onMore: () => onMore(context, role),
+                      onEdit: () => onEdit(roleItem.role),
+                      onMore: () => onMore(context, roleItem.role),
                     );
                   },
                 ),
@@ -168,7 +171,7 @@ class RolesTableWidget extends StatelessWidget {
 }
 
 class _RoleRow extends StatelessWidget {
-  final RoleEntity role;
+  final RoleItemEntity roleItem;
   final VoidCallback onEdit;
   final VoidCallback onMore;
   final Color textColor;
@@ -176,7 +179,7 @@ class _RoleRow extends StatelessWidget {
   final Color borderOnAvatar;
 
   const _RoleRow({
-    required this.role,
+    required this.roleItem,
     required this.onEdit,
     required this.onMore,
     required this.textColor,
@@ -199,7 +202,10 @@ class _RoleRow extends StatelessWidget {
       child: Row(
         children: [
           // Nombre del rol
-          Expanded(flex: 2, child: Text(role.roleName, style: textStyle)),
+          Expanded(
+            flex: 2,
+            child: Text(roleItem.role.roleName, style: textStyle),
+          ),
 
           // Avatares
           Expanded(
@@ -207,7 +213,7 @@ class _RoleRow extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: _AvatarGroup(
-                initials: [], //role.assignees,
+                users: roleItem.users,
                 maxVisible: 4,
                 borderColor: borderOnAvatar,
               ),
@@ -238,6 +244,29 @@ class _RoleRow extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  List<String> usersInitials({required List<UserEntity> users}) {
+    return users.map((u) {
+      final raw = (u.name ?? '').trim();
+      if (raw.isEmpty) return '—';
+
+      final parts = raw
+          .split(RegExp(r'\s+'))
+          .where((p) => p.isNotEmpty)
+          .toList();
+      if (parts.isEmpty) return '—';
+
+      final first = parts.first.characters.isNotEmpty
+          ? parts.first.characters.first
+          : '';
+      final last = parts.length > 1 && parts.last.characters.isNotEmpty
+          ? parts.last.characters.first
+          : '';
+
+      final initials = (first + last).toUpperCase();
+      return initials.isNotEmpty ? initials : '—';
+    }).toList();
   }
 }
 
@@ -273,18 +302,18 @@ class _IconButtonCircle extends StatelessWidget {
 }
 
 class _AvatarGroup extends StatelessWidget {
-  final List<String> initials;
+  final List<UserEntity> users;
   final int maxVisible;
   final Color borderColor;
   const _AvatarGroup({
-    required this.initials,
+    required this.users,
     this.maxVisible = 4,
     required this.borderColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (initials.isEmpty) {
+    if (users.isEmpty) {
       return Text(
         '—',
         style: TextStyle(
@@ -294,8 +323,8 @@ class _AvatarGroup extends StatelessWidget {
       );
     }
 
-    final visible = initials.take(maxVisible).toList();
-    final remaining = initials.length - visible.length;
+    final visible = users.take(maxVisible).toList();
+    final remaining = users.length - visible.length;
 
     return SizedBox(
       height: 32,
@@ -306,9 +335,10 @@ class _AvatarGroup extends StatelessWidget {
             Positioned(
               left: i * 22.0,
               child: _CircleAvatarLabel(
-                label: visible[i],
+                label: visible[i].name?.firstLastInitials ?? "",
                 index: i,
                 borderColor: borderColor,
+                isDeactivated: visible[i].status == StateEnum.inactive,
               ),
             ),
           if (remaining > 0)
@@ -326,11 +356,13 @@ class _CircleAvatarLabel extends StatelessWidget {
   final String label;
   final int index;
   final Color borderColor;
+  final bool isDeactivated;
 
   const _CircleAvatarLabel({
     required this.label,
     required this.index,
     required this.borderColor,
+    this.isDeactivated = false
   });
 
   @override
@@ -351,7 +383,7 @@ class _CircleAvatarLabel extends StatelessWidget {
       width: 32,
       height: 32,
       decoration: BoxDecoration(
-        color: bg,
+        color: isDeactivated ? bg.withValues(alpha: 0.2) : bg,
         shape: BoxShape.circle,
         border: Border.all(color: borderColor, width: 2),
       ),

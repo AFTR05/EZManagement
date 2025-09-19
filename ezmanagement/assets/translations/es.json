@@ -35,5 +35,6 @@
     "profileEditUpdatedSnack": "Datos actualizados",
     "profileEditUpdatePhotoTitle": "Actualizar foto de perfil",
     "profileEditSelectImageButton": "Seleccionar imagen",
-    "profileEditCancelButton": "Cancelar"
+    "profileEditCancelButton": "Cancelar",
+    "logoutError": "No se pudo cerrar sesión. Inténtalo de nuevo."
 }

@@ -34,5 +34,6 @@
     "profileEditUpdatedSnack": "Data updated",
     "profileEditUpdatePhotoTitle": "Update profile picture",
     "profileEditSelectImageButton": "Select image",
-    "profileEditCancelButton": "Cancel"
+    "profileEditCancelButton": "Cancel",
+    "logoutError": "Couldn't sign you out. Please try again."
 }

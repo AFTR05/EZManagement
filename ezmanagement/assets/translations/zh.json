@@ -35,5 +35,6 @@
     "profileEditUpdatedSnack": "数据已更新",
     "profileEditUpdatePhotoTitle": "更新头像",
     "profileEditSelectImageButton": "选择图片",
-    "profileEditCancelButton": "取消"
+    "profileEditCancelButton": "取消",
+    "logoutError": "退出登录失败。请重试。"
 }
