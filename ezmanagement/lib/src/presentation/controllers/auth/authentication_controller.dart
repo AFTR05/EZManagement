@@ -48,19 +48,15 @@ class AuthenticationController extends ChangeNotifier {
     return await res.fold(
       (failure) async {
         _errorMessage = failure.message;
-        // ⬇️ apaga loader en error
         ref.read(authLoadingProvider.notifier).stop();
         notifyListeners();
         return Left(failure);
       },
       (auth) async {
         _session = auth;
-        // await accountUC.touchLoginAt();
-        // final p = await accountUC.getAccount();
-        // p.fold(
-        //   (f) => _errorMessage = f.message,
-        //   (acc) => _profile = acc,
-        // );
+        await userUsecase.touchLoginAt();
+        final p = await userUsecase.getAccount();
+        p.fold((f) => _errorMessage = f.message, (acc) => _profile = acc);
         ref.read(authLoadingProvider.notifier).stop();
         notifyListeners();
         return const Right(true);

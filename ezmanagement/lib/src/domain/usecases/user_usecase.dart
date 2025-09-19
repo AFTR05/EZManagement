@@ -32,13 +32,14 @@ class UserUsecase {
   }
 
   Future<Either<Failure, UserEntity>> createUser({
+    required String uuid,
     required String name,
     required String email,
     required RoleEntity role,
     required String password,
   }) {
     final user = UserEntity(
-      uid: "",
+      uid: uuid,
       email: email,
       name: name,
       roleId: role.id,
