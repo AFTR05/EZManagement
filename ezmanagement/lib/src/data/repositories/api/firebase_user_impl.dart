@@ -68,10 +68,10 @@ class FirestoreUserRepositoryImpl implements UserRepository {
       final user = _auth.currentUser;
       if (user == null) return Left(_err('No hay usuario autenticado.'));
 
-      //await _db.collection(accountsCollectionPath).doc(user.uid).set({
-      //  'lastLoginAt': FieldValue.serverTimestamp(),
-      //  'updatedAt': FieldValue.serverTimestamp(),
-      //}, SetOptions(merge: true));
+      await _db.collection(usersCollectionPath).doc(user.uid).set({
+        'lastLoginAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
 
       return const Right(true);
     } catch (_) {

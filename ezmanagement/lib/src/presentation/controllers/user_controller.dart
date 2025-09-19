@@ -20,18 +20,21 @@ class UserController {
     required String password,
     bool sendEmailVerification = true,
   }) async {
-    await _userUsecase.createUser(
-      name: name,
-      email: email,
-      role: role,
-      password: password,
-    );
     final registerParams = RegisterParams(
       email: email,
       password: password,
       sendEmailVerification: sendEmailVerification,
     );
-    await _authenticationUsecase.signUp(registerParams);
+    final register = await _authenticationUsecase.signUp(registerParams);
+    if (register.isRight) {
+      await _userUsecase.createUser(
+        uuid: register.right.uid,
+        name: name,
+        email: email,
+        role: role,
+        password: password,
+      );
+    }
   }
 
   Stream<List<UserEntity>> watchAllElements() {
