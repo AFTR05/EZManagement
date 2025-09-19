@@ -3,21 +3,28 @@ import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// Botón para cambiar el tema de la aplicación entre modo oscuro y claro.
+///
+/// Utiliza Riverpod para acceder y modificar el estado actual del tema.
 class ThemeSwitchButton extends ConsumerWidget {
+  /// Constructor del widget.
   const ThemeSwitchButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    
+    // Detecta si el tema actual es oscuro.
     final isDarkmode = Theme.of(context).brightness == Brightness.dark;
 
+    // Color de la tarjeta según el modo.
     final cardColor = isDarkmode ? EZColorsApp.darkGray : Colors.white;
+    // Color utilizado para la sombra de la tarjeta según el modo.
     final shadowColor = isDarkmode
-        ? Colors.black.withValues(alpha: 0.3)
-        : Colors.black.withValues(alpha: 0.09);
+        ? Colors.black.withAlpha(77) // 0.3 * 255 ≈ 77
+        : Colors.black.withAlpha(23); // 0.09 * 255 ≈ 23
+    // Color del texto del título según el modo.
     final textColor = isDarkmode ? Colors.white : Colors.black87;
 
-    // Icono dinámico basado en el tema actual
+    // Icono que representa el tema actual (oscuro o claro).
     final themeIcon = isDarkmode ? Icons.dark_mode : Icons.light_mode;
 
     return Padding(
@@ -41,9 +48,8 @@ class ThemeSwitchButton extends ConsumerWidget {
           borderRadius: BorderRadius.circular(12),
           color: cardColor,
           child: ListTile(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             tileColor: cardColor,
             leading: Icon(themeIcon, color: EZColorsApp.ezAppColor, size: 22),
             title: Text(
@@ -62,20 +68,17 @@ class ThemeSwitchButton extends ConsumerWidget {
               inactiveThumbColor: Colors.white,
               inactiveTrackColor: EZColorsApp.lightGray,
               trackOutlineColor: WidgetStateProperty.all(
-                isDarkmode
-                    ? EZColorsApp.ezAppColor
-                    : EZColorsApp.lightGray,
+                isDarkmode ? EZColorsApp.ezAppColor : EZColorsApp.lightGray,
               ),
+              // Cambia el tema al alternar el switch usando Riverpod.
               onChanged: (value) {
                 ref
                     .read(themeAppProvider.notifier)
                     .setTheme(value ? ThemeMode.dark : ThemeMode.light);
               },
             ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 4,
-            ),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
           ),
         ),
       ),

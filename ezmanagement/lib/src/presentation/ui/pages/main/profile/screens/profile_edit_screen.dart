@@ -8,7 +8,13 @@ import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:ezmanagement/translations/locale_keys.g.dart';
 
+/// Pantalla para editar el perfil del usuario.
+///
+/// Permite modificar nombre, teléfono, email, fecha de cumpleaños y foto de perfil.
+///
+/// Usa Riverpod para estado y maneja selección de imágenes con ImagePicker.
 class ProfileEditScreen extends ConsumerStatefulWidget {
+  /// Constructor de ProfileEditScreen.
   const ProfileEditScreen({super.key});
 
   @override
@@ -16,16 +22,20 @@ class ProfileEditScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
+  /// Clave global para el formulario de validación.
   final _formKey = GlobalKey<FormState>();
 
+  /// Campos con valores iniciales del formulario.
   String name = "Maria Celeste Cardona";
   String phone = "+57 320 7406333";
   String email = "mariacel@ezsolutions";
   DateTime? birthday = DateTime(2004, 12, 14);
 
+  /// Almacena la imagen seleccionada por el usuario.
   XFile? profileImage;
   final ImagePicker _picker = ImagePicker();
 
+  /// Función para seleccionar una imagen desde la galería.
   Future<void> _pickImage() async {
     final XFile? pickedFile =
         await _picker.pickImage(source: ImageSource.gallery);
@@ -35,6 +45,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     }
   }
 
+  /// Muestra el modal para elegir actualizar la foto de perfil.
   void _showImagePickerModal() {
     final isDarkmode = Theme.of(context).brightness == Brightness.dark;
     showModalBottomSheet(
@@ -51,18 +62,20 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Detecta si el tema actual es oscuro.
     final isDarkmode = Theme.of(context).brightness == Brightness.dark;
 
+    // Muestra imagen de perfil si existe una seleccionada, si no imagen por defecto.
     final profileImageWidget = profileImage != null
         ? CircleAvatar(
             radius: 50,
             backgroundImage: FileImage(File(profileImage!.path)),
-            backgroundColor: EZColorsApp.ezAppColor.withValues(alpha: 0.08),
+            backgroundColor: EZColorsApp.ezAppColor.withAlpha(20),
           )
         : CircleAvatar(
             radius: 50,
             backgroundImage: const AssetImage('assets/images/profile.jpg'),
-            backgroundColor: EZColorsApp.ezAppColor.withValues(alpha: 0.08),
+            backgroundColor: EZColorsApp.ezAppColor.withAlpha(20),
           );
 
     return Scaffold(
@@ -78,6 +91,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: Stack(
                   children: [
+                    // Foto de perfil con opción para editar imagen
                     profileImageWidget,
                     Positioned(
                       bottom: 0,
@@ -87,63 +101,64 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                         child: CircleAvatar(
                           radius: 18,
                           backgroundColor: EZColorsApp.ezAppColor,
-                          child: const Icon(PhosphorIconsBold.pencilSimple, color: Colors.white, size: 20),
+                          child: const Icon(
+                            PhosphorIconsBold.pencilSimple,
+                            color: Colors.white,
+                            size: 20,
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-              buildLabel(
-                LocaleKeys.profileEditFullNameLabel.tr(),
-                isDarkmode ? Colors.white : Colors.black87,
-              ),
+              // Label y campo de entrada para nombre completo
+              buildLabel(LocaleKeys.profileEditFullNameLabel.tr(),
+                  isDarkmode ? Colors.white : Colors.black87),
               buildInput(
                 initialValue: name,
-                inputBg: EZColorsApp.ezAppColor.withValues(alpha: 0.08),
+                inputBg: EZColorsApp.ezAppColor.withAlpha(20),
                 textColor: isDarkmode ? Colors.white : Colors.black87,
                 onChanged: (val) => name = val,
               ),
-              buildLabel(
-                LocaleKeys.profileEditPhoneLabel.tr(),
-                isDarkmode ? Colors.white : Colors.black87,
-              ),
+              // Label y campo de entrada para teléfono
+              buildLabel(LocaleKeys.profileEditPhoneLabel.tr(),
+                  isDarkmode ? Colors.white : Colors.black87),
               buildInput(
                 initialValue: phone,
-                inputBg: EZColorsApp.ezAppColor.withValues(alpha: 0.08),
+                inputBg: EZColorsApp.ezAppColor.withAlpha(20),
                 textColor: isDarkmode ? Colors.white : Colors.black87,
                 keyboardType: TextInputType.phone,
                 onChanged: (val) => phone = val,
               ),
-              buildLabel(
-                LocaleKeys.profileEditEmailLabel.tr(),
-                isDarkmode ? Colors.white : Colors.black87,
-              ),
+              // Label y campo de entrada para correo electrónico
+              buildLabel(LocaleKeys.profileEditEmailLabel.tr(),
+                  isDarkmode ? Colors.white : Colors.black87),
               buildInput(
                 initialValue: email,
-                inputBg: EZColorsApp.ezAppColor.withValues(alpha: 0.08),
+                inputBg: EZColorsApp.ezAppColor.withAlpha(20),
                 textColor: isDarkmode ? Colors.white : Colors.black87,
                 keyboardType: TextInputType.emailAddress,
                 onChanged: (val) => email = val,
               ),
-              buildLabel(
-                LocaleKeys.profileEditBirthdayLabel.tr(),
-                isDarkmode ? Colors.white : Colors.black87,
-              ),
+              // Label y selector de fecha para cumpleaños
+              buildLabel(LocaleKeys.profileEditBirthdayLabel.tr(),
+                  isDarkmode ? Colors.white : Colors.black87),
               buildDateInput(
                 context,
-                EZColorsApp.ezAppColor.withValues(alpha: 0.08),
+                EZColorsApp.ezAppColor.withAlpha(20),
                 isDarkmode ? Colors.white : Colors.black87,
               ),
-
               const SizedBox(height: 30),
 
+              // Botón para guardar cambios
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: EZColorsApp.ezAppColor,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                     padding: const EdgeInsets.symmetric(vertical: 13),
                   ),
                   child: Text(
@@ -158,7 +173,9 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   onPressed: () {
                     setState(() {});
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(LocaleKeys.profileEditUpdatedSnack.tr())),
+                      SnackBar(
+                          content:
+                              Text(LocaleKeys.profileEditUpdatedSnack.tr())),
                     );
                   },
                 ),
@@ -170,6 +187,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     );
   }
 
+  /// Construye un widget etiqueta para los campos de formulario.
   Widget buildLabel(String label, Color textColor) {
     return Align(
       alignment: Alignment.centerLeft,
@@ -188,6 +206,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     );
   }
 
+  /// Construye un widget campo de texto para formularios.
   Widget buildInput({
     required String initialValue,
     required Color inputBg,
@@ -199,16 +218,21 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       initialValue: initialValue,
       keyboardType: keyboardType,
       onChanged: onChanged,
-      style: TextStyle(fontFamily: 'OpenSansHebrew', fontSize: 15, color: textColor),
+      style: TextStyle(
+          fontFamily: 'OpenSansHebrew', fontSize: 15, color: textColor),
       decoration: InputDecoration(
         filled: true,
         fillColor: inputBg,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+        border:
+            OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
       ),
     );
   }
 
+  /// Construye un widget selector de fecha para cumpleaños.
+  ///
+  /// Al tocar abre un [showDatePicker] con tema personalizado según modo claro u oscuro.
   Widget buildDateInput(BuildContext context, Color inputBg, Color textColor) {
     return GestureDetector(
       onTap: () async {
@@ -217,39 +241,84 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
           initialDate: birthday ?? DateTime(2000),
           firstDate: DateTime(1900),
           lastDate: DateTime(DateTime.now().year + 1),
-          builder: (context, child) => Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: ColorScheme.light(primary: EZColorsApp.ezAppColor),
-              textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(foregroundColor: EZColorsApp.ezAppColor),
+          builder: (context, child) {
+            final isDark = Theme.of(context).brightness == Brightness.dark;
+            final mainBlue = EZColorsApp.ezAppColor;
+
+            final calendarTheme = ThemeData(
+              colorScheme: ColorScheme(
+                brightness: isDark ? Brightness.dark : Brightness.light,
+                primary: mainBlue,
+                onPrimary: Colors.white,
+                secondary: mainBlue,
+                onSecondary: Colors.white,
+                error: Colors.red,
+                onError: Colors.white,
+                surface: isDark ? EZColorsApp.darkGray : Colors.white,
+                onSurface: isDark ? Colors.white : const Color(0xFF242425),
               ),
-            ),
-            child: child!,
-          ),
+              textTheme: TextTheme(
+                titleLarge: TextStyle(
+                  color: isDark ? Colors.white : const Color(0xFF242425),
+                  fontFamily: 'OpenSansHebrew',
+                  fontWeight: FontWeight.w700,
+                ),
+                bodyMedium: TextStyle(
+                  color: isDark ? Colors.white : const Color(0xFF242425),
+                  fontFamily: 'OpenSansHebrew',
+                ),
+              ),
+              iconTheme: IconThemeData(color: mainBlue),
+              highlightColor: mainBlue,
+              scaffoldBackgroundColor: isDark ? EZColorsApp.darkGray : Colors.white,
+              dialogTheme: DialogThemeData(backgroundColor: isDark ? EZColorsApp.darkGray : Colors.white),
+            );
+
+            return Theme(
+              data: calendarTheme,
+              child: child!,
+            );
+          },
         );
         if (picked != null) setState(() => birthday = picked);
       },
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(color: inputBg, borderRadius: BorderRadius.circular(10)),
+        decoration: BoxDecoration(
+          color: inputBg,
+          borderRadius: BorderRadius.circular(10),
+        ),
         alignment: Alignment.centerLeft,
         child: Text(
           birthday != null
               ? '${birthday!.day.toString().padLeft(2, '0')} / ${birthday!.month.toString().padLeft(2, '0')} / ${birthday!.year}'
               : LocaleKeys.profileEditSelectDate.tr(), // "Seleccionar fecha"
-          style: TextStyle(fontFamily: 'OpenSansHebrew', fontSize: 15, color: textColor),
+          style: TextStyle(
+            fontFamily: 'OpenSansHebrew',
+            fontSize: 15,
+            color: textColor,
+          ),
         ),
       ),
     );
   }
 }
 
+/// Contenido del modal para seleccionar o cancelar actualización de foto.
+///
+/// Contiene botones para elegir imagen desde galería o cancelar.
 class _ModalContent extends StatelessWidget {
+  /// Callback que se ejecuta al seleccionar imagen.
   final VoidCallback onPickImage;
+
+  /// Color principal azul.
   final Color mainBlue;
+
+  /// Indica si el tema es oscuro.
   final bool isDarkmode;
 
+  /// Constructor para el modal.
   const _ModalContent({
     required this.onPickImage,
     required this.mainBlue,
@@ -270,6 +339,7 @@ class _ModalContent extends StatelessWidget {
       height: 160,
       child: Column(
         children: [
+          // Título del modal
           Text(
             LocaleKeys.profileEditUpdatePhotoTitle.tr(), // "Actualizar foto de perfil"
             style: TextStyle(
@@ -280,6 +350,7 @@ class _ModalContent extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
+          // Botón para seleccionar imagen desde galería
           ElevatedButton.icon(
             icon: const Icon(Icons.photo_library),
             label: Text(
@@ -290,6 +361,7 @@ class _ModalContent extends StatelessWidget {
             onPressed: onPickImage,
           ),
           const SizedBox(height: 10),
+          // Botón para cancelar modal
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: isDarkmode ? Colors.grey[700] : Colors.grey,
