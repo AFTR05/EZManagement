@@ -2,6 +2,7 @@ import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
 import 'package:ezmanagement/src/domain/enum/permission_enum.dart';
 import 'package:ezmanagement/src/inject/riverpod_presentation.dart';
 import 'package:ezmanagement/src/presentation/ui/custom_widgets/inputs/custom_input_text_field_widget.dart';
+import 'package:ezmanagement/src/presentation/ui/custom_widgets/inputs/custom_text_area_field.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/custom_widgets/app_bar/custom_app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -51,13 +52,13 @@ class _CreateRoleScreenState extends ConsumerState<CreateRoleScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomInputTextField(
+            CustomInputTextFieldWidget(
               labelTitle: "Nombre",
               hintText: "Digite el nombre",
               controller: _nameController,
             ),
             const SizedBox(height: 24),
-            CustomInputTextField(
+            CustomTextAreaFieldWidget(
               labelTitle: "Descripcion",
               hintText: "Digite la descripcion",
               controller: _descriptionController,

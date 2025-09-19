@@ -55,8 +55,9 @@ class FirebaseAuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<AccountEntity?> restoredSessionOnce(
-      {Duration timeout = const Duration(seconds: 2)}) async {
+  Future<AccountEntity?> restoredSessionOnce({
+    Duration timeout = const Duration(seconds: 2),
+  }) async {
     try {
       fb.User? user = _auth.currentUser;
 
@@ -91,7 +92,6 @@ class FirebaseAuthenticationRepositoryImpl implements AuthenticationRepository {
       return null;
     }
   }
-
 
   @override
   Future<Either<Failure, AccountEntity>> logIn({
@@ -145,7 +145,6 @@ class FirebaseAuthenticationRepositoryImpl implements AuthenticationRepository {
   Future<Either<Failure, AccountEntity>> register({
     required String email,
     required String password,
-    UserEntity? profileDraft,
     bool sendEmailVerification = true,
   }) async {
     try {
@@ -157,20 +156,6 @@ class FirebaseAuthenticationRepositoryImpl implements AuthenticationRepository {
       if (sendEmailVerification) {
         await user.sendEmailVerification();
       }
-      if (profileDraft != null) {
-        //await _db.collection(accountsCollectionPath).doc(user.uid).set({
-        //  'uid': user.uid,
-        //  'email': profileDraft.email ?? email.trim(),
-        //  'firstName': profileDraft.firstName,
-        //  'lastName': profileDraft.lastName,
-        //  'phone': profileDraft.phone,
-        //  'status': profileDraft.status,
-        //  'createdAt': DateTime.now().toUtc(),
-        //  'updatedAt': DateTime.now().toUtc(),
-        //  'lastLoginAt': DateTime.now().toUtc(),
-        //}, SetOptions(merge: true));
-      }
-
       final token = await _tryGetIdToken(user);
       final exp = _decodeExpOrNull(token);
 

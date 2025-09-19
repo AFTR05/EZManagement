@@ -43,9 +43,7 @@ class RoleManagementScreen extends ConsumerWidget {
                   const Spacer(),
                   _AddRoleButton(
                     onPressed: () {
-                      Navigator.of(
-                        context,
-                      ).pushNamed(RoutesApp.createRole);
+                      Navigator.of(context).pushNamed(RoutesApp.createRole);
                     },
                     brand: brand,
                   ),

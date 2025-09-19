@@ -43,6 +43,25 @@ final userRepositoryProvider = AutoDisposeProvider<UserRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UserRepositoryRef = AutoDisposeProviderRef<UserRepository>;
+String _$userCRUDRepositoryHash() =>
+    r'5fdc215ca37af0a34d4549ff719eabde4262498f';
+
+/// See also [userCRUDRepository].
+@ProviderFor(userCRUDRepository)
+final userCRUDRepositoryProvider =
+    AutoDisposeProvider<UserCRUDRepository>.internal(
+      userCRUDRepository,
+      name: r'userCRUDRepositoryProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$userCRUDRepositoryHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef UserCRUDRepositoryRef = AutoDisposeProviderRef<UserCRUDRepository>;
 String _$roleRepositoryHash() => r'6a4b5947b8fb0d8e67fb649e2438161d3cfe1a85';
 
 /// See also [roleRepository].

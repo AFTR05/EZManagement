@@ -4,7 +4,8 @@ import 'package:ezmanagement/src/presentation/ui/pages/main/main_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/configuration/password_manager_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/configuration/role_management/create_role_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/configuration/role_management/role_management_screen.dart';
-import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/configuration/user_management_screen.dart';
+import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/configuration/user_management/create_user_screen.dart';
+import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/configuration/user_management/user_management_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/profile_edit_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/profile_settings_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/report/Report_schedule_screen.dart';
@@ -23,6 +24,7 @@ class RoutesApp {
   static const String createRole = "/config/roles/create";
   static const String configUsers = "/config/users";
   static const String reportSchedule = "/report-schedule";
+  static const String createUser = "/config/users/create";
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -46,6 +48,8 @@ class RoutesApp {
         return MaterialPageRoute(builder: (_) => const UserManagementScreen());
       case reportSchedule:
         return MaterialPageRoute(builder: (_) => const ReportScheduleScreen());
+      case createUser:
+        return MaterialPageRoute(builder: (_) => const CreateUserScreen()); 
       default:
         return MaterialPageRoute(builder: (_) => const NoRouteScreen());
     }
