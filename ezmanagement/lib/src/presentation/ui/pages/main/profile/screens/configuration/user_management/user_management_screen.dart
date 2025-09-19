@@ -7,11 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
-class UserManagementScreen extends ConsumerWidget {
+class UserManagementScreen extends ConsumerStatefulWidget {
   const UserManagementScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<UserManagementScreen> createState() =>
+      _UserManagementScreenState();
+}
+
+class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
+  bool _sortAsc = true;
+  @override
+  Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final scaffoldBg = isDark ? EZColorsApp.darkBackgroud : Colors.white;
     final textPrimary = isDark ? Colors.white : EZColorsApp.textDarkColor;
@@ -68,21 +75,36 @@ class UserManagementScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: EZColorsApp.ezAppColor.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Text(
-                    'A → Z',
-                    style: TextStyle(
-                      color: EZColorsApp.ezAppColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () => setState(() => _sortAsc = !_sortAsc),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: EZColorsApp.ezAppColor.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          _sortAsc ? Icons.arrow_upward : Icons.arrow_downward,
+                          size: 16,
+                          color: EZColorsApp.ezAppColor,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          _sortAsc ? 'A → Z' : 'Z → A',
+                          style: TextStyle(
+                            color: EZColorsApp.ezAppColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -109,12 +131,23 @@ class UserManagementScreen extends ConsumerWidget {
                   return const Center(child: Text('No hay usuarios'));
                 }
 
+                int cmpString(String? a, String? b) =>
+                    (a ?? '').toLowerCase().compareTo((b ?? '').toLowerCase());
+
+                final sorted = [...users]
+                  ..sort((a, b) {
+                    final cmp = cmpString(
+                      a.name,
+                      b.name,
+                    );
+                    return _sortAsc ? cmp : -cmp;
+                  });
                 return ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: users.length,
+                  itemCount: sorted.length,
                   separatorBuilder: (_, _) => const SizedBox(height: 12),
                   itemBuilder: (context, i) {
-                    final u = users[i];
+                    final u = sorted[i];
                     return _buildUserCard(
                       context: context,
                       name: (u.name?.isNotEmpty ?? false)
@@ -156,7 +189,7 @@ class UserManagementScreen extends ConsumerWidget {
             ? []
             : [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
+                  color: Colors.grey.withValues(alpha: .1),
                   spreadRadius: 0,
                   blurRadius: 4,
                   offset: const Offset(0, 2),
@@ -202,7 +235,7 @@ class UserManagementScreen extends ConsumerWidget {
                   role,
                   style: TextStyle(
                     fontSize: 14,
-                    color: textPrimary.withOpacity(0.7),
+                    color: textPrimary.withValues(alpha: .7),
                     fontFamily: "OpenSansHebrew",
                   ),
                 ),
