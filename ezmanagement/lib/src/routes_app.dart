@@ -5,6 +5,7 @@ import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/conf
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/configuration/role_management/role_management_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/profile_edit_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/main/profile/screens/profile_settings_screen.dart';
+import 'package:ezmanagement/src/presentation/ui/pages/main/report/Report_schedule_screen.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/no_route_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,7 @@ class RoutesApp {
   static const String passwordManager = "/password-manager";
   static const String configRoles = "/config/roles";
   static const String configUsers = "/config/users";
+  static const String reportSchedule = "/report-schedule";
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -37,6 +39,8 @@ class RoutesApp {
         return MaterialPageRoute(builder: (_) => const RoleManagementScreen());
       case configUsers:
         return MaterialPageRoute(builder: (_) => const RoleManagementScreen());
+      case reportSchedule:
+        return MaterialPageRoute(builder: (_) => const ReportScheduleScreen());
       default:
         return MaterialPageRoute(builder: (_) => const NoRouteScreen());
     }
