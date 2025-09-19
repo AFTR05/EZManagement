@@ -65,7 +65,7 @@ class _CustomAuthTextFieldWidgetState extends State<CustomAuthTextFieldWidget> {
         inputFormatters: widget.pattern != null ? [widget.pattern!] : null,
         decoration: InputDecoration(
           hintText: widget.hintText,
-          hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
+          hintStyle: TextStyle(color: EZColorsApp.hoverColorText, fontSize: 16),
           prefixIcon: widget.isPasswordField
               ? IconButton(
                   icon: Icon(

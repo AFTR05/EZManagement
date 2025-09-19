@@ -1,24 +1,28 @@
 import 'package:ezmanagement/src/core/helpers/ez_colors_app.dart';
+import 'package:ezmanagement/src/domain/entities/user_entity.dart';
+import 'package:ezmanagement/src/inject/riverpod_presentation.dart';
 import 'package:ezmanagement/src/presentation/ui/pages/custom_widgets/app_bar/custom_app_bar_widget.dart';
+import 'package:ezmanagement/src/routes_app.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
-class UserManagementScreen extends StatelessWidget {
+class UserManagementScreen extends ConsumerWidget {
   const UserManagementScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final brand = EZColorsApp.ezAppColor;
     final scaffoldBg = isDark ? EZColorsApp.darkBackgroud : Colors.white;
-    final borderColor = EZColorsApp.ezAppColor;
-    final dividerColor = EZColorsApp.ezAppColor;
     final textPrimary = isDark ? Colors.white : EZColorsApp.textDarkColor;
     final fontFamily = "OpenSansHebrew";
 
     return Scaffold(
       backgroundColor: scaffoldBg,
-      appBar: CustomAppBarWidget(title: "Gestion de usuarios"),
+      appBar: CustomAppBarWidget(
+        title: "Gestion de usuarios",
+        actions: [_AddUserButton(brand: EZColorsApp.ezAppColor)],
+      ),
       body: Column(
         children: [
           Padding(
@@ -90,37 +94,39 @@ class UserManagementScreen extends StatelessWidget {
 
           // Lista de usuarios
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                _buildUserCard(
-                  context: context,
-                  name: 'Diego Posada',
-                  role: 'Administrador',
-                  avatar: 'assets/images/diego.jpg', // Reemplaza con tu asset
-                ),
-                const SizedBox(height: 12),
-                _buildUserCard(
-                  context: context,
-                  name: 'Juan Andrés Posada',
-                  role: 'Empleado',
-                  avatar: 'assets/images/juan.jpg', // Reemplaza con tu asset
-                ),
-                const SizedBox(height: 12),
-                _buildUserCard(
-                  context: context,
-                  name: 'Andrés Toro',
-                  role: 'Administrador',
-                  avatar: 'assets/images/andres.jpg', // Reemplaza con tu asset
-                ),
-                const SizedBox(height: 12),
-                _buildUserCard(
-                  context: context,
-                  name: 'Ana Milena Alcans',
-                  role: 'Empleado',
-                  avatar: 'assets/images/ana.jpg',
-                ),
-              ],
+            child: StreamBuilder<List<UserEntity>>(
+              stream: ref.read(userControllerProvider).watchAllElements(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  return const Center(child: Text('Error cargando usuarios'));
+                }
+
+                final users = snapshot.data ?? const <UserEntity>[];
+                if (users.isEmpty) {
+                  return const Center(child: Text('No hay usuarios'));
+                }
+
+                return ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: users.length,
+                  separatorBuilder: (_, _) => const SizedBox(height: 12),
+                  itemBuilder: (context, i) {
+                    final u = users[i];
+                    return _buildUserCard(
+                      context: context,
+                      name: (u.name?.isNotEmpty ?? false)
+                          ? u.name!
+                          : '(Sin nombre)',
+                      role: (u.roleName?.isNotEmpty ?? false)
+                          ? u.roleName!
+                          : '—',
+                    );
+                  },
+                );
+              },
             ),
           ),
         ],
@@ -132,7 +138,6 @@ class UserManagementScreen extends StatelessWidget {
     required BuildContext context,
     required String name,
     required String role,
-    required String avatar,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final brand = EZColorsApp.ezAppColor;
@@ -334,44 +339,19 @@ class UserManagementScreen extends StatelessWidget {
 }
 
 class _AddUserButton extends StatelessWidget {
-  final VoidCallback onPressed;
   final Color brand;
-  const _AddUserButton({required this.onPressed, required this.brand});
+  const _AddUserButton({required this.brand});
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: brand,
-        elevation: 0,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Agregar usuario',
-            style: TextStyle(
-              color: isDark ? EZColorsApp.darkBackgroud : Colors.white,
-              fontWeight: FontWeight.bold,
-              fontFamily: "OpenSansHebrew",
-            ),
-          ),
-          const SizedBox(width: 8),
-          SvgPicture.asset(
-            "assets/images/icons/add_icon.svg",
-            width: 25,
-            height: 25,
-            colorFilter: ColorFilter.mode(
-              isDark ? EZColorsApp.darkBackgroud : Colors.white,
-              BlendMode.srcIn,
-            ),
-          ),
-        ],
+    return IconButton(
+      onPressed: () => Navigator.of(context).pushNamed(RoutesApp.createUser),
+      style: ElevatedButton.styleFrom(),
+      icon: SvgPicture.asset(
+        "assets/images/icons/add_icon.svg",
+        width: 30,
+        height: 25,
+        colorFilter: ColorFilter.mode(EZColorsApp.ezAppColor, BlendMode.srcIn),
       ),
     );
   }

@@ -43,5 +43,22 @@ final roleControllerProvider = AutoDisposeProvider<RoleController>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef RoleControllerRef = AutoDisposeProviderRef<RoleController>;
+String _$userControllerHash() => r'dcefe664effd603c89390df1aa974263d5cf4035';
+
+/// See also [userController].
+@ProviderFor(userController)
+final userControllerProvider = AutoDisposeProvider<UserController>.internal(
+  userController,
+  name: r'userControllerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$userControllerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef UserControllerRef = AutoDisposeProviderRef<UserController>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

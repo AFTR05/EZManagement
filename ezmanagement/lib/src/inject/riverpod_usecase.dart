@@ -14,7 +14,7 @@ AuthenticationUsecase authenticationUsecase(Ref ref){
 
 @riverpod
 UserUsecase userUsecase(Ref ref){
-  return UserUsecase(userRepository: ref.watch(userRepositoryProvider));
+  return UserUsecase(userRepository: ref.watch(userRepositoryProvider), userCRUDRepository: ref.watch(userCRUDRepositoryProvider));
 }
 
 @riverpod

@@ -20,12 +20,10 @@ class LogInParams {
 class RegisterParams {
   final String email;
   final String password;
-  final UserEntity? profileDraft;
   final bool sendEmailVerification;
   const RegisterParams({
     required this.email,
     required this.password,
-    this.profileDraft,
     this.sendEmailVerification = true,
   });
 }
@@ -52,7 +50,6 @@ class AuthenticationUsecase {
     return authRepository.register(
       email: params.email,
       password: params.password,
-      profileDraft: params.profileDraft,
       sendEmailVerification: params.sendEmailVerification,
     );
   }

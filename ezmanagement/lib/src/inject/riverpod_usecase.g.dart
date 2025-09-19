@@ -26,7 +26,7 @@ final authenticationUsecaseProvider =
 // ignore: unused_element
 typedef AuthenticationUsecaseRef =
     AutoDisposeProviderRef<AuthenticationUsecase>;
-String _$userUsecaseHash() => r'c41889e4b97bd5dd9f12b2f460ccf660a3735fcf';
+String _$userUsecaseHash() => r'b53d99d404120eea87191e89e114a879a73ef226';
 
 /// See also [userUsecase].
 @ProviderFor(userUsecase)

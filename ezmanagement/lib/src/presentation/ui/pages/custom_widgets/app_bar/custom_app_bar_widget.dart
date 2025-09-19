@@ -4,10 +4,12 @@ import 'package:flutter_svg/svg.dart';
 
 class CustomAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final List<Widget>? actions;
 
   const CustomAppBarWidget({
     super.key,
     required this.title,
+    this.actions = const []
   });
 
   @override
@@ -28,6 +30,7 @@ class CustomAppBarWidget extends StatelessWidget implements PreferredSizeWidget 
           height: 28,
         ),
       ),
+      actions: actions,
       title: Text(
         title,
         style: TextStyle(

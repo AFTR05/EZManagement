@@ -6,7 +6,7 @@ import 'package:ezmanagement/src/domain/entities/user_entity.dart';
 import 'package:ezmanagement/src/domain/enum/state_enum.dart';
 import 'package:ezmanagement/src/domain/repositories/crud/user_repository.dart';
 
-class UserRepositoryImpl extends UserRepository {
+class UserRepositoryImpl extends UserCRUDRepository {
   UserRepositoryImpl({
     FirebaseFirestore? firestore,
     String collectionPath = 'users',
@@ -86,6 +86,23 @@ class UserRepositoryImpl extends UserRepository {
       return Right(UserEntity.fromMap(_normalize(doc.data()!), doc.id));
     } catch (_) {
       return Left(UserException());
+    }
+  }
+
+  @override
+  Stream<Either<Failure, List<UserEntity>>> watchAllElements() async* {
+    try {
+      final snapshots = _collection.orderBy('name').snapshots();
+      await for (final snap in snapshots) {
+        final items = snap.docs
+            .map((d) => UserEntity.fromMap(d.data(), d.id))
+            .toList();
+        yield Right(items);
+      }
+    } on FirebaseException catch (_) {
+      yield Left(UserException());
+    } catch (_) {
+      yield Left(UserException());
     }
   }
 

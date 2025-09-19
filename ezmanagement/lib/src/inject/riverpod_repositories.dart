@@ -3,8 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ezmanagement/src/data/repositories/api/firebase_authentication_impl.dart';
 import 'package:ezmanagement/src/data/repositories/api/firebase_user_impl.dart';
 import 'package:ezmanagement/src/data/repositories/database/crud/role_repository_impl.dart';
+import 'package:ezmanagement/src/data/repositories/database/crud/user_repository_impl.dart';
 import 'package:ezmanagement/src/domain/repositories/authentication_repository.dart';
 import 'package:ezmanagement/src/domain/repositories/crud/role_repository.dart';
+import 'package:ezmanagement/src/domain/repositories/crud/user_repository.dart';
 import 'package:ezmanagement/src/domain/repositories/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,6 +28,13 @@ AuthenticationRepository authenticationRepository(Ref ref) {
 UserRepository userRepository(Ref ref) {
   return FirestoreUserRepositoryImpl(
     firebaseAuth: FirebaseAuth.instance,
+    firestore: FirebaseFirestore.instance,
+  );
+}
+
+@riverpod
+UserCRUDRepository userCRUDRepository(Ref ref) {
+  return UserRepositoryImpl(
     firestore: FirebaseFirestore.instance,
   );
 }

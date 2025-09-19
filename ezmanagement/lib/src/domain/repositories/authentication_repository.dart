@@ -15,7 +15,6 @@ abstract class AuthenticationRepository {
   Future<Either<Failure, AccountEntity>> register({
     required String email,
     required String password,
-    UserEntity? profileDraft,
     bool sendEmailVerification = true,
   });
 
